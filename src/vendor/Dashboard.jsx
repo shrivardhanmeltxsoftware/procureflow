@@ -20,6 +20,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  List,
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
@@ -30,6 +31,7 @@ import ReceiptIcon from "@mui/icons-material/Receipt";
 import PaymentIcon from "@mui/icons-material/Payment";
 import MessageIcon from "@mui/icons-material/Message";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import { NavLink } from "react-router";
 
 const menuItems = [
   { text: "Dashboard", path: "/dashboard/overview", icon: <DashboardIcon /> },
@@ -60,7 +62,7 @@ export const Dashboard = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const drawerWidth = 240;
+  const drawerWidth = 200;
   const isAuthenticated = Boolean(localStorage.getItem("vendor"));
   const vendor = JSON.parse(localStorage.getItem("vendor"));
 
@@ -152,13 +154,13 @@ export const Dashboard = () => {
           },
         }}
       >
-        <Box sx={{ width: 240 }} role="presentation">
-          <Toolbar />
+        <Toolbar />
+        <List role="presentation" sx={{ pt: 0 }}>
           {menuItems.map((item) => (
             <ListItemButton
-              key={item.text}
-              selected={location.pathname === item.path}
-              onClick={() => navigate(item.path)}
+              key={item.path}
+              component={NavLink}
+              to={item.path}
               sx={{
                 "&:hover": {
                   backgroundColor: "#bbdefb",
@@ -166,20 +168,17 @@ export const Dashboard = () => {
                 "& .MuiListItemIcon-root": {
                   color: "primary.main",
                 },
+                "&.active": {
+                  backgroundColor: "#bbdefb",
+                  fontWeight: "bold",
+                },
               }}
             >
               <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText
-                primary={item.text}
-                sx={{
-                  "& .MuiListItemText-primary": {
-                    fontSize: "18px",
-                  },
-                }}
-              />
+              <ListItemText primary={item.text} />
             </ListItemButton>
           ))}
-        </Box>
+        </List>
       </Drawer>
       <Box
         component="main"

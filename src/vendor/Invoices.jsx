@@ -2,13 +2,6 @@ import {
   Box,
   Typography,
   Divider,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  TableContainer,
-  Paper,
   Button,
   Chip,
   CircularProgress,
@@ -17,6 +10,8 @@ import {
   Dialog,
   DialogTitle,
   FormControl,
+  IconButton,
+  Tooltip,
   Select,
   MenuItem,
   TextField,
@@ -29,6 +24,7 @@ import { getInvoices, uploadInvoice, getPurchaseOrders } from "../services/api";
 import { formatDate } from "../utils/dateUtils";
 import { DataTable } from "../components/DataTable";
 
+import VisibilityIcon from "@mui/icons-material/Visibility";
 const STATUS_COLOR = {
   approved: "success",
   pending: "warning",
@@ -139,13 +135,14 @@ export const Invoices = () => {
       label: "Action",
       render: (invoice) =>
         invoice.fileData ? (
-          <Button
-            size="small"
-            variant="outlined"
-            onClick={() => window.open(invoice.fileData, "_blank")}
-          >
-            View
-          </Button>
+          <Tooltip title="View invoice">
+            <IconButton
+              aria-label={`View ${invoice.invoiceNumber || "invoice"}`}
+              onClick={() => window.open(invoice.fileData, "_blank")}
+            >
+              <VisibilityIcon fontSize="medium" color="primary" />
+            </IconButton>
+          </Tooltip>
         ) : (
           <Typography variant="caption" color="text.secondary">
             Metadata only
@@ -231,7 +228,12 @@ export const Invoices = () => {
           No invoices uploaded yet.
         </Typography>
       ) : (
-        <DataTable columns={columns} rows={invoices} headerBg="#bbdefb" sx={{ mt: 3 }}/>
+        <DataTable
+          columns={columns}
+          rows={invoices}
+          headerBg="#bbdefb"
+          sx={{ mt: 3 }}
+        />
       )}
 
       <Dialog

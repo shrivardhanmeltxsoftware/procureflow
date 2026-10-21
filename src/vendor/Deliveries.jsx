@@ -17,12 +17,15 @@ import {
   Dialog,
   DialogTitle,
   Grid,
+  Tooltip,
+  IconButton,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { Navigate } from "react-router";
 import { getPurchaseOrders } from "../services/api";
 import { formatDate } from "../utils/dateUtils";
 import { DataTable } from "../components/DataTable";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 export const Deliveries = () => {
   const [loading, setLoading] = useState(true);
@@ -91,16 +94,18 @@ export const Deliveries = () => {
       key: "actions",
       label: "Action",
       render: (delivery) => (
-        <Button
-          variant="outlined"
-          size="medium"
-          onClick={() => {
-            setSelectedPurchaseOrder(delivery);
-            setOpen(true);
-          }}
-        >
-          View
-        </Button>
+        <Tooltip>
+          <IconButton>
+            <VisibilityIcon
+              fontSize="medium"
+              color="primary"
+              onClick={() => {
+                setSelectedPurchaseOrder(delivery);
+                setOpen(true);
+              }}
+            />
+          </IconButton>
+        </Tooltip>
       ),
     },
   ];
@@ -142,7 +147,12 @@ export const Deliveries = () => {
           No deliveries yet. Accepted purchase orders will appear here.
         </Typography>
       ) : (
-        <DataTable columns={columns} rows={deliveries} headerBg="#bbdefb" sx={{ mt: 3 }} />
+        <DataTable
+          columns={columns}
+          rows={deliveries}
+          headerBg="#bbdefb"
+          sx={{ mt: 3 }}
+        />
       )}
 
       <Dialog

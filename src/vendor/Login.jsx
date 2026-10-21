@@ -45,6 +45,11 @@ export const Login = () => {
       if (!vendor?.id) {
         throw new Error("This vendor account is missing an ID.");
       }
+      if (vendor.status !== "active") {
+        throw new Error(
+          "Your account is not active. Please contact the admin.",
+        );
+      }
 
       // Store vendor info in localStorage
       localStorage.setItem("vendor", JSON.stringify(vendor));

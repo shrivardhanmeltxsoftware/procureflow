@@ -17,12 +17,15 @@ import {
   Dialog,
   DialogTitle,
   Grid,
+  Tooltip,
+  IconButton,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router";
 import { getPurchaseOrders, updatePOStatus } from "../services/api";
 import { formatDate } from "../utils/dateUtils";
 import { DataTable } from "../components/DataTable";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const STATUS_COLOR = {
   completed: "success",
@@ -105,16 +108,18 @@ export const PurchaseOrders = () => {
       key: "actions",
       label: "Action",
       render: (po) => (
-        <Button
-          variant="outlined"
-          size="medium"
-          onClick={() => {
-            setSelectedPurchaseOrder(po);
-            setOpen(true);
-          }}
-        >
-          View
-        </Button>
+        <Tooltip>
+          <IconButton>
+            <VisibilityIcon
+              fontSize="medium"
+              color="primary"
+              onClick={() => {
+                setSelectedPurchaseOrder(po);
+                setOpen(true);
+              }}
+            />
+          </IconButton>
+        </Tooltip>
       ),
     },
   ];
@@ -158,7 +163,12 @@ export const PurchaseOrders = () => {
           No PO's uploaded yet.
         </Typography>
       ) : (
-        <DataTable columns={columns} rows={purchaseOrders} headerBg="#bbdefb" sx={{ mt: 3 }}/>
+        <DataTable
+          columns={columns}
+          rows={purchaseOrders}
+          headerBg="#bbdefb"
+          sx={{ mt: 3 }}
+        />
       )}
 
       <Dialog
