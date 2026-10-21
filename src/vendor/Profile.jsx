@@ -59,7 +59,8 @@ export const Profile = () => {
       updates.licensed = vendor.licensed;
 
       const updatedVendor = await updateVendor(vendor.id, updates);
-      localStorage.setItem("vendor", JSON.stringify(updatedVendor));
+      const { password: _pw, ...safeVendor } = updatedVendor;
+      localStorage.setItem("vendor", JSON.stringify(safeVendor));
       setVendor(updatedVendor);
       setMessage("Profile updated successfully.");
     } catch (saveError) {

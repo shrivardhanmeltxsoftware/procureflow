@@ -32,12 +32,10 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { DataTable } from "../components/DataTable";
-
-const STATUS_COLOR = {
-  approved: "success",
-  pending: "warning",
-  rejected: "error",
-};
+import {
+  DOCUMENT_STATUS_COLOR,
+  getStatusColor,
+} from "../constants/statusColors";
 
 export const AdminDocuments = () => {
   const [search, setSearch] = useState("");
@@ -63,7 +61,7 @@ export const AdminDocuments = () => {
       render: (doc) => (
         <Chip
           label={doc.status || "pending"}
-          color={STATUS_COLOR[doc.status] || "warning"}
+          color={getStatusColor(DOCUMENT_STATUS_COLOR, doc.status, "warning")}
           size="small"
           sx={{ textTransform: "capitalize" }}
         />

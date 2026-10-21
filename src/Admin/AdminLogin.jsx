@@ -45,7 +45,8 @@ export const AdminLogin = () => {
       }
 
       // Store admin info in localStorage
-      localStorage.setItem("admin", JSON.stringify(admin));
+      const { password: _pw, ...safeAdmin } = admin;
+      localStorage.setItem("admin", JSON.stringify(safeAdmin));
       localStorage.setItem("adminId", String(admin.id));
 
       navigate("/admin/dashboard", { replace: true });

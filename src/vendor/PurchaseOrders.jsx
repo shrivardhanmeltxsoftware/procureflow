@@ -26,13 +26,10 @@ import { getPurchaseOrders, updatePOStatus } from "../services/api";
 import { formatDate } from "../utils/dateUtils";
 import { DataTable } from "../components/DataTable";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-
-const STATUS_COLOR = {
-  completed: "success",
-  pending: "warning",
-  rejected: "error",
-  accepted: "primary",
-};
+import {
+  getStatusColor,
+  PO_STATUS_COLOR,
+} from "../constants/statusColors";
 
 export const PurchaseOrders = () => {
   const [purchaseOrders, setPurchaseOrders] = useState([]);
@@ -97,7 +94,7 @@ export const PurchaseOrders = () => {
         return (
           <Chip
             label={status}
-            color={STATUS_COLOR[status] || "warning"}
+            color={getStatusColor(PO_STATUS_COLOR, status, "warning")}
             size="small"
             sx={{ textTransform: "capitalize" }}
           />
@@ -192,7 +189,11 @@ export const PurchaseOrders = () => {
             </Typography>
             <Chip
               label={selectedPurchaseOrder?.status || "Pending"}
-              color={STATUS_COLOR[selectedPurchaseOrder?.status] || "warning"}
+              color={getStatusColor(
+                PO_STATUS_COLOR,
+                selectedPurchaseOrder?.status,
+                "warning",
+              )}
               size="medium"
             />
           </Box>

@@ -33,12 +33,10 @@ import {
   updateVendorStatus,
 } from "../services/AdminAPI";
 import { DataTable } from "../components/DataTable";
-
-const STATUS_COLOR = {
-  active: "success",
-  pending: "warning",
-  inactive: "error",
-};
+import {
+  getStatusColor,
+  VENDOR_STATUS_COLOR,
+} from "../constants/statusColors";
 
 export const AdminVendors = () => {
   const [filter, setFilter] = useState("all");
@@ -86,7 +84,7 @@ export const AdminVendors = () => {
       render: (vendor) => (
         <Chip
           label={vendor.status || "pending"}
-          color={STATUS_COLOR[vendor.status] || "warning"}
+          color={getStatusColor(VENDOR_STATUS_COLOR, vendor.status, "warning")}
           size="small"
           sx={{ textTransform: "capitalize" }}
         />

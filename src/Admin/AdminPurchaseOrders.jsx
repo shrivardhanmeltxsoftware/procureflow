@@ -33,20 +33,11 @@ import {
 } from "../services/AdminAPI";
 import { formatDate } from "../utils/dateUtils";
 import { DataTable } from "../components/DataTable";
-
-const STATUS_COLOR = {
-  accepted: "info",
-  pending: "warning",
-  completed: "success",
-  rejected: "error",
-};
-
-const DELIVERY_COLOR = {
-  shipped: "info",
-  pending: "warning",
-  delivered: "success",
-  delayed: "error",
-};
+import {
+  DELIVERY_STATUS_COLOR,
+  getStatusColor,
+  PO_STATUS_COLOR,
+} from "../constants/statusColors";
 
 const formatCurrency = (amount) => {
   if (amount === null || amount === undefined) return "N/A";
@@ -141,7 +132,7 @@ export const AdminPurchaseOrders = () => {
       render: (po) => (
         <Chip
           label={po.status || "Pending"}
-          color={STATUS_COLOR[po.status?.toLowerCase()] || "warning"}
+          color={getStatusColor(PO_STATUS_COLOR, po.status, "warning")}
           size="small"
           sx={{ textTransform: "capitalize" }}
         />
@@ -154,7 +145,7 @@ export const AdminPurchaseOrders = () => {
       render: (po) => (
         <Chip
           label={po.deliveryStatus || "N/A"}
-          color={DELIVERY_COLOR[po.deliveryStatus?.toLowerCase()] || "default"}
+          color={getStatusColor(DELIVERY_STATUS_COLOR, po.deliveryStatus)}
           size="small"
           sx={{ textTransform: "capitalize" }}
         />

@@ -34,12 +34,10 @@ import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import BadgeIcon from "@mui/icons-material/Badge";
 import { getVendorById, updateVendor } from "../services/AdminAPI";
 import { formatDate } from "../utils/dateUtils";
-
-const STATUS_COLOR = {
-  active: "success",
-  pending: "warning",
-  inactive: "error",
-};
+import {
+  getStatusColor,
+  VENDOR_STATUS_COLOR,
+} from "../constants/statusColors";
 
 /**
  * Reusable read-only field display for View Mode
@@ -384,7 +382,7 @@ export const AdminVendorDetails = () => {
               </Typography>
               <Chip
                 label={vendor.status || "pending"}
-                color={STATUS_COLOR[vendor.status] || "warning"}
+                color={getStatusColor(VENDOR_STATUS_COLOR, vendor.status, "warning")}
                 size="small"
                 sx={{ textTransform: "capitalize", fontWeight: "bold" }}
               />
@@ -452,7 +450,7 @@ export const AdminVendorDetails = () => {
                   label="Account Status"
                   value={vendor.status}
                   chip
-                  chipColor={STATUS_COLOR[vendor.status] || "default"}
+                  chipColor={getStatusColor(VENDOR_STATUS_COLOR, vendor.status)}
                   icon={BadgeIcon}
                 />
               )}

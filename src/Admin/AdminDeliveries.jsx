@@ -28,13 +28,10 @@ import SearchIcon from "@mui/icons-material/Search";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { formatDate } from "../utils/dateUtils";
 import { DataTable } from "../components/DataTable";
-
-const DELIVERY_COLOR = {
-  pending: "warning",
-  shipped: "info",
-  delivered: "success",
-  delayed: "error",
-};
+import {
+  DELIVERY_STATUS_COLOR,
+  getStatusColor,
+} from "../constants/statusColors";
 
 const DELIVERY_OPTIONS = ["pending", "shipped", "delivered", "delayed"];
 
@@ -113,7 +110,7 @@ export const AdminDeliveries = () => {
       render: (po) => (
         <Chip
           label={po.deliveryStatus || "N/A"}
-          color={DELIVERY_COLOR[po.deliveryStatus?.toLowerCase()] || "default"}
+          color={getStatusColor(DELIVERY_STATUS_COLOR, po.deliveryStatus)}
           size="small"
           sx={{ textTransform: "capitalize" }}
         />

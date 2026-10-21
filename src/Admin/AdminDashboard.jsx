@@ -29,6 +29,7 @@ import {
   getVendors,
 } from "../services/AdminAPI";
 import { formatDate } from "../utils/dateUtils";
+import { normalizeStatus } from "../constants/statusColors";
 
 const STATUS_COLORS = {
   pending: "#ED6C02",
@@ -85,9 +86,6 @@ const parseDate = (value) => {
 
   return Number.isNaN(date.getTime()) ? null : date;
 };
-
-const normalizeStatus = (status) =>
-  typeof status === "string" ? status.trim().toLowerCase() : "";
 
 const getLabel = (status) => {
   const normalized = normalizeStatus(status);

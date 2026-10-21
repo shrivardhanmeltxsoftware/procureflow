@@ -31,20 +31,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { formatDate } from "../utils/dateUtils";
-
-const STATUS_COLOR = {
-  accepted: "info",
-  pending: "warning",
-  completed: "success",
-  rejected: "error",
-};
-
-const DELIVERY_COLOR = {
-  shipped: "info",
-  pending: "warning",
-  delivered: "success",
-  delayed: "error",
-};
+import {
+  DELIVERY_STATUS_COLOR,
+  getStatusColor,
+  PO_STATUS_COLOR,
+} from "../constants/statusColors";
 
 const ITEM_GRID = "2.2fr 0.8fr 1fr 1fr 40px";
 
@@ -293,14 +284,12 @@ export const AdminPODetails = () => {
           </Box>
           <Chip
             label={po.status || "pending"}
-            color={STATUS_COLOR[po.status?.toLowerCase()] || "warning"}
+            color={getStatusColor(PO_STATUS_COLOR, po.status, "warning")}
             sx={{ textTransform: "capitalize" }}
           />
           <Chip
             label={`Delivery: ${po.deliveryStatus || "N/A"}`}
-            color={
-              DELIVERY_COLOR[po.deliveryStatus?.toLowerCase()] || "default"
-            }
+            color={getStatusColor(DELIVERY_STATUS_COLOR, po.deliveryStatus)}
             variant="outlined"
             sx={{ textTransform: "capitalize" }}
           />

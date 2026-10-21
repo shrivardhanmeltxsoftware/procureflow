@@ -17,12 +17,10 @@ import { useState, useEffect } from "react";
 import { Navigate } from "react-router";
 import { formatDate } from "../utils/dateUtils";
 import { DataTable } from "../components/DataTable";
-
-const STATUS_COLOR = {
-  pending: "warning",
-  approved: "info",
-  paid: "success",
-};
+import {
+  getStatusColor,
+  PAYMENT_STATUS_COLOR,
+} from "../constants/statusColors";
 
 export const Payments = () => {
   const [invoices, setInvoices] = useState([]);
@@ -90,7 +88,7 @@ export const Payments = () => {
         return (
           <Chip
             label={status}
-            color={STATUS_COLOR[status] || "warning"}
+            color={getStatusColor(PAYMENT_STATUS_COLOR, status, "warning")}
             size="small"
             sx={{ textTransform: "capitalize" }}
           />

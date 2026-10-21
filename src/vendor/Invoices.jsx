@@ -25,11 +25,10 @@ import { formatDate } from "../utils/dateUtils";
 import { DataTable } from "../components/DataTable";
 
 import VisibilityIcon from "@mui/icons-material/Visibility";
-const STATUS_COLOR = {
-  approved: "success",
-  pending: "warning",
-  rejected: "error",
-};
+import {
+  getStatusColor,
+  INVOICE_STATUS_COLOR,
+} from "../constants/statusColors";
 
 const toBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -123,7 +122,7 @@ export const Invoices = () => {
         return (
           <Chip
             label={status}
-            color={STATUS_COLOR[status] || "warning"}
+            color={getStatusColor(INVOICE_STATUS_COLOR, status, "warning")}
             size="small"
             sx={{ textTransform: "capitalize" }}
           />

@@ -19,17 +19,15 @@ import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutl
 import { uploadDocument, getDocuments } from "../services/api";
 import { formatDate } from "../utils/dateUtils";
 import { DataTable } from "../components/DataTable";
+import {
+  DOCUMENT_STATUS_COLOR,
+  getStatusColor,
+} from "../constants/statusColors";
 
 const DOC_TYPE_LABELS = {
   business_license: "Business License",
   insurance_certificate: "Insurance Certificate",
   tax_registration: "Tax Registration",
-};
-
-const STATUS_COLOR = {
-  approved: "success",
-  pending: "warning",
-  rejected: "error",
 };
 
 const toBase64 = (file) =>
@@ -93,7 +91,7 @@ export const Documents = () => {
         return (
           <Chip
             label={status}
-            color={STATUS_COLOR[status] || "warning"}
+            color={getStatusColor(DOCUMENT_STATUS_COLOR, status, "warning")}
             size="small"
             sx={{ textTransform: "capitalize" }}
           />

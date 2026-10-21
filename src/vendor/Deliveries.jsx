@@ -26,6 +26,10 @@ import { getPurchaseOrders } from "../services/api";
 import { formatDate } from "../utils/dateUtils";
 import { DataTable } from "../components/DataTable";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import {
+  DELIVERY_STATUS_COLOR,
+  getStatusColor,
+} from "../constants/statusColors";
 
 export const Deliveries = () => {
   const [loading, setLoading] = useState(true);
@@ -84,7 +88,7 @@ export const Deliveries = () => {
         return (
           <Chip
             label={delivery.deliveryStatus || "N/A"}
-            color={DELIVERY_STATUS_COLOR[status] || "warning"}
+            color={getStatusColor(DELIVERY_STATUS_COLOR, status, "warning")}
             size="small"
           />
         );
@@ -113,13 +117,6 @@ export const Deliveries = () => {
   if (!vendor?.id) {
     return <Navigate to="/" replace />;
   }
-
-  const DELIVERY_STATUS_COLOR = {
-    pending: "warning",
-    shipped: "info",
-    delivered: "success",
-    delayed: "error",
-  };
 
   const handleClose = () => {
     setOpen(false);
@@ -277,10 +274,11 @@ export const Deliveries = () => {
             </Typography>
             <Chip
               label={selectedPurchaseOrder?.deliveryStatus}
-              color={
-                DELIVERY_STATUS_COLOR[selectedPurchaseOrder?.deliveryStatus] ||
-                "warning"
-              }
+              color={getStatusColor(
+                DELIVERY_STATUS_COLOR,
+                selectedPurchaseOrder?.deliveryStatus,
+                "warning",
+              )}
               size="medium"
               sx={{ mt: 1, fontWeight: "bold", ml: 1 }}
             />

@@ -51,8 +51,10 @@ export const Login = () => {
         );
       }
 
+      const { password: _pw, ...safeVendor } = vendor;
+
       // Store vendor info in localStorage
-      localStorage.setItem("vendor", JSON.stringify(vendor));
+      localStorage.setItem("vendor", JSON.stringify(safeVendor));
       localStorage.setItem("vendorId", String(vendor.id));
 
       navigate("/dashboard", { replace: true });

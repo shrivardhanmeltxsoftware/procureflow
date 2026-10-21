@@ -34,11 +34,10 @@ import {
   updatePaymentStatus,
 } from "../services/AdminAPI";
 import { DataTable } from "../components/DataTable";
-
-const PAYMENT_STATUS_COLOR = {
-  pending: "warning",
-  paid: "success",
-};
+import {
+  getStatusColor,
+  PAYMENT_STATUS_COLOR,
+} from "../constants/statusColors";
 
 const formatCurrency = (amount) => {
   const numericAmount = Number(amount);
@@ -347,7 +346,7 @@ export const AdminPayments = () => {
     return (
       <Chip
         label={label}
-        color={PAYMENT_STATUS_COLOR[status] || "default"}
+        color={getStatusColor(PAYMENT_STATUS_COLOR, status)}
         size="small"
       />
     );

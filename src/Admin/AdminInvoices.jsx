@@ -25,12 +25,10 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { formatDate } from "../utils/dateUtils";
 import { DataTable } from "../components/DataTable";
-
-const STATUS_COLOR = {
-  approved: "success",
-  pending: "warning",
-  rejected: "error",
-};
+import {
+  getStatusColor,
+  INVOICE_STATUS_COLOR,
+} from "../constants/statusColors";
 
 export const AdminInvoices = () => {
   const [search, setSearch] = useState("");
@@ -102,7 +100,7 @@ export const AdminInvoices = () => {
         return (
           <Chip
             label={status}
-            color={STATUS_COLOR[status] || "warning"}
+            color={getStatusColor(INVOICE_STATUS_COLOR, status, "warning")}
             size="small"
             sx={{ textTransform: "capitalize" }}
           />
