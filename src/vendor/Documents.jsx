@@ -12,19 +12,13 @@ import {
   Select,
   MenuItem,
   Chip,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  TableContainer,
   CircularProgress,
-  Paper,
 } from "@mui/material";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { uploadDocument, getDocuments } from "../services/api";
 import { formatDate } from "../utils/dateUtils";
+import { DataTable } from "../components/DataTable";
 
 const DOC_TYPE_LABELS = {
   business_license: "Business License",
@@ -72,6 +66,59 @@ export const Documents = () => {
   useEffect(() => {
     fetchDocuments();
   }, []);
+
+  const columns = [
+    {
+      key: "documentType",
+      label: "Document Type",
+      render: (doc) =>
+        DOC_TYPE_LABELS[doc.documentType] || doc.documentType || "N/A",
+    },
+    {
+      key: "fileName",
+      label: "File Name",
+      render: (doc) => doc.fileName || "N/A",
+    },
+    {
+      key: "uploadedAt",
+      label: "Uploaded On",
+      render: (doc) => formatDate(doc.uploadedAt),
+    },
+    {
+      key: "status",
+      label: "Status",
+      render: (doc) => {
+        const status = doc.status?.toLowerCase() || "pending";
+
+        return (
+          <Chip
+            label={status}
+            color={STATUS_COLOR[status] || "warning"}
+            size="small"
+            sx={{ textTransform: "capitalize" }}
+          />
+        );
+      },
+    },
+    {
+      key: "actions",
+      label: "Action",
+      render: (doc) =>
+        doc.fileData ? (
+          <Button
+            size="small"
+            variant="outlined"
+            onClick={() => window.open(doc.fileData, "_blank")}
+          >
+            View
+          </Button>
+        ) : (
+          <Typography variant="caption" color="text.secondary">
+            Metadata only
+          </Typography>
+        ),
+    },
+  ];
 
   const handleClose = () => {
     setOpen(false);
@@ -146,54 +193,7 @@ export const Documents = () => {
           No documents uploaded yet.
         </Typography>
       ) : (
-        <TableContainer component={Paper} sx={{ mt: 2 }}>
-          <Table>
-            <TableHead>
-              <TableRow sx={{ backgroundColor: "#bbdefb" }}>
-                <TableCell>Document type</TableCell>
-                <TableCell>File name</TableCell>
-                <TableCell>Uploaded on</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {documents.map((doc) => (
-                <TableRow key={doc.id}>
-                  <TableCell>
-                    {DOC_TYPE_LABELS[doc.documentType] || doc.documentType}
-                  </TableCell>
-                  <TableCell>{doc.fileName}</TableCell>
-                  <TableCell>
-                    {formatDate(doc.uploadedAt)}
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      label={doc.status || "Pending"}
-                      color={STATUS_COLOR[doc.status] || "warning"}
-                      size="small"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    {doc.fileData ? (
-                      <Button
-                        size="small"
-                        variant="outlined"
-                        onClick={() => window.open(doc.fileData, "_blank")}
-                      >
-                        View
-                      </Button>
-                    ) : (
-                      <Typography variant="caption" color="text.secondary">
-                        Metadata only
-                      </Typography>
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <DataTable columns={columns} rows={documents} headerBg="#bbdefb" />
       )}
 
       <Dialog

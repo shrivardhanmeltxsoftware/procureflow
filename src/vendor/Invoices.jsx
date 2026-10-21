@@ -27,6 +27,7 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { getInvoices, uploadInvoice, getPurchaseOrders } from "../services/api";
 import { formatDate } from "../utils/dateUtils";
+import { DataTable } from "../components/DataTable";
 
 const STATUS_COLOR = {
   approved: "success",
@@ -92,6 +93,66 @@ export const Invoices = () => {
   if (!vendor?.id) {
     return <Navigate to="/" replace />;
   }
+
+  const columns = [
+    {
+      key: "poNumber",
+      label: "PO Number",
+      render: (invoice) => invoice.poNumber || "N/A",
+    },
+    {
+      key: "invoiceNumber",
+      label: "Invoice Number",
+      render: (invoice) => invoice.invoiceNumber || "N/A",
+    },
+    {
+      key: "uploadedDate",
+      label: "Uploaded Date",
+      render: (invoice) => formatDate(invoice.uploadedDate),
+    },
+    {
+      key: "amount",
+      label: "Amount",
+      render: (invoice) =>
+        invoice.amount === null || invoice.amount === undefined
+          ? "N/A"
+          : `₹${Number(invoice.amount).toLocaleString("en-IN")}`,
+    },
+    {
+      key: "status",
+      label: "Status",
+      render: (invoice) => {
+        const status = invoice.status?.toLowerCase() || "pending";
+
+        return (
+          <Chip
+            label={status}
+            color={STATUS_COLOR[status] || "warning"}
+            size="small"
+            sx={{ textTransform: "capitalize" }}
+          />
+        );
+      },
+    },
+    {
+      key: "actions",
+      label: "Action",
+      render: (invoice) =>
+        invoice.fileData ? (
+          <Button
+            size="small"
+            variant="outlined"
+            onClick={() => window.open(invoice.fileData, "_blank")}
+          >
+            View
+          </Button>
+        ) : (
+          <Typography variant="caption" color="text.secondary">
+            Metadata only
+          </Typography>
+        ),
+    },
+  ];
 
   const handleUploadClose = () => {
     setUploadOpen(false);
@@ -170,54 +231,7 @@ export const Invoices = () => {
           No invoices uploaded yet.
         </Typography>
       ) : (
-        <TableContainer component={Paper} sx={{ mt: 2 }}>
-          <Table>
-            <TableHead>
-              <TableRow sx={{ backgroundColor: "#bbdefb" }}>
-                <TableCell>PO number</TableCell>
-                <TableCell>Invoice number</TableCell>
-                <TableCell>Uploaded date</TableCell>
-                <TableCell>Amount</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {invoices.map((inv) => (
-                <TableRow key={inv.id}>
-                  <TableCell>{inv.poNumber}</TableCell>
-                  <TableCell>{inv.invoiceNumber}</TableCell>
-                  <TableCell>
-                    {formatDate(inv.uploadedDate)}
-                  </TableCell>
-                  <TableCell>₹{inv.amount}</TableCell>
-                  <TableCell>
-                    <Chip
-                      label={inv.status || "Pending"}
-                      color={STATUS_COLOR[inv.status] || "warning"}
-                      size="small"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    {inv.fileData ? (
-                      <Button
-                        size="small"
-                        variant="outlined"
-                        onClick={() => window.open(inv.fileData, "_blank")}
-                      >
-                        View
-                      </Button>
-                    ) : (
-                      <Typography variant="caption" color="text.secondary">
-                        Metadata only
-                      </Typography>
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <DataTable columns={columns} rows={invoices} headerBg="#bbdefb" sx={{ mt: 3 }}/>
       )}
 
       <Dialog

@@ -22,6 +22,7 @@ import { useState, useEffect } from "react";
 import { Navigate } from "react-router";
 import { getPurchaseOrders } from "../services/api";
 import { formatDate } from "../utils/dateUtils";
+import { DataTable } from "../components/DataTable";
 
 export const Deliveries = () => {
   const [loading, setLoading] = useState(true);
@@ -46,6 +47,63 @@ export const Deliveries = () => {
   useEffect(() => {
     fetchPurchaseOrders();
   }, []);
+
+  const columns = [
+    {
+      key: "poNumber",
+      label: "PO Number",
+      render: (delivery) => delivery.poNumber || "N/A",
+    },
+    {
+      key: "items",
+      label: "Items",
+      render: (delivery) =>
+        (delivery.items || [])
+          .map((item) => `${item.name} (Qty: ${item.qty})`)
+          .join(", ") || "N/A",
+    },
+    {
+      key: "deliveryDate",
+      label: "Expected Delivery",
+      render: (delivery) => formatDate(delivery.deliveryDate),
+    },
+    {
+      key: "actualDeliveryDate",
+      label: "Actual Delivery",
+      render: (delivery) => formatDate(delivery.actualDeliveryDate),
+    },
+    {
+      key: "deliveryStatus",
+      label: "Status",
+      render: (delivery) => {
+        const status = delivery.deliveryStatus?.toLowerCase();
+
+        return (
+          <Chip
+            label={delivery.deliveryStatus || "N/A"}
+            color={DELIVERY_STATUS_COLOR[status] || "warning"}
+            size="small"
+          />
+        );
+      },
+    },
+    {
+      key: "actions",
+      label: "Action",
+      render: (delivery) => (
+        <Button
+          variant="outlined"
+          size="medium"
+          onClick={() => {
+            setSelectedPurchaseOrder(delivery);
+            setOpen(true);
+          }}
+        >
+          View
+        </Button>
+      ),
+    },
+  ];
 
   if (!vendor?.id) {
     return <Navigate to="/" replace />;
@@ -84,56 +142,7 @@ export const Deliveries = () => {
           No deliveries yet. Accepted purchase orders will appear here.
         </Typography>
       ) : (
-        <TableContainer component={Paper} sx={{ mt: 2 }}>
-          <Table sx={{ minWidth: 650 }} aria-label="DeliveryTable">
-            <TableHead>
-              <TableRow sx={{ backgroundColor: "#bbdefb" }}>
-                <TableCell>PO Number</TableCell>
-                <TableCell>Items</TableCell>
-                <TableCell>Expected delivery</TableCell>
-                <TableCell>Actual delivery</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {deliveries.map((delivery) => (
-                <TableRow key={delivery.id}>
-                  <TableCell>{delivery.poNumber}</TableCell>
-                  <TableCell>
-                    {(delivery.items || [])
-                      .map((item) => `${item.name} (Qty: ${item.qty})`)
-                      .join(", ")}
-                  </TableCell>
-                  <TableCell>{formatDate(delivery.deliveryDate)}</TableCell>
-                  <TableCell>{formatDate(delivery.actualDeliveryDate)}</TableCell>
-                  <TableCell>
-                    <Chip
-                      label={delivery.deliveryStatus}
-                      color={
-                        DELIVERY_STATUS_COLOR[delivery.deliveryStatus] ||
-                        "warning"
-                      }
-                      size="small"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      variant="outlined"
-                      size="medium"
-                      onClick={() => {
-                        setSelectedPurchaseOrder(delivery);
-                        setOpen(true);
-                      }}
-                    >
-                      View
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <DataTable columns={columns} rows={deliveries} headerBg="#bbdefb" sx={{ mt: 3 }} />
       )}
 
       <Dialog

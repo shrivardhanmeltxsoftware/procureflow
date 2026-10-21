@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router";
 import { getPurchaseOrders, updatePOStatus } from "../services/api";
 import { formatDate } from "../utils/dateUtils";
+import { DataTable } from "../components/DataTable";
 
 const STATUS_COLOR = {
   completed: "success",
@@ -54,6 +55,69 @@ export const PurchaseOrders = () => {
   useEffect(() => {
     fetchPurchaseOrders();
   }, []);
+
+  const columns = [
+    {
+      key: "poNumber",
+      label: "PO Number",
+      render: (po) => po.poNumber || "N/A",
+    },
+    {
+      key: "buyer",
+      label: "Buyer",
+      render: (po) => po.buyer || "N/A",
+    },
+    {
+      key: "orderDate",
+      label: "Order Date",
+      render: (po) => formatDate(po.orderDate),
+    },
+    {
+      key: "deliveryDate",
+      label: "Delivery Date",
+      render: (po) => formatDate(po.deliveryDate),
+    },
+    {
+      key: "amount",
+      label: "Amount",
+      render: (po) =>
+        po.amount === null || po.amount === undefined
+          ? "N/A"
+          : `₹${Number(po.amount).toLocaleString("en-IN")}`,
+    },
+    {
+      key: "status",
+      label: "Status",
+      render: (po) => {
+        const status = po.status?.toLowerCase() || "pending";
+
+        return (
+          <Chip
+            label={status}
+            color={STATUS_COLOR[status] || "warning"}
+            size="small"
+            sx={{ textTransform: "capitalize" }}
+          />
+        );
+      },
+    },
+    {
+      key: "actions",
+      label: "Action",
+      render: (po) => (
+        <Button
+          variant="outlined"
+          size="medium"
+          onClick={() => {
+            setSelectedPurchaseOrder(po);
+            setOpen(true);
+          }}
+        >
+          View
+        </Button>
+      ),
+    },
+  ];
 
   if (!vendor?.id) {
     return <Navigate to="/" replace />;
@@ -94,51 +158,7 @@ export const PurchaseOrders = () => {
           No PO's uploaded yet.
         </Typography>
       ) : (
-        <TableContainer component={Paper} sx={{ mt: 2 }}>
-          <Table sx={{ minWidth: 650 }} aria-label="POtable">
-            <TableHead>
-              <TableRow sx={{ backgroundColor: "#bbdefb" }}>
-                <TableCell>PO Number</TableCell>
-                <TableCell>Buyer</TableCell>
-                <TableCell>Order Date</TableCell>
-                <TableCell>Delivery Date</TableCell>
-                <TableCell>Amount</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {purchaseOrders.map((po) => (
-                <TableRow key={po.id}>
-                  <TableCell>{po.poNumber}</TableCell>
-                  <TableCell>{po.buyer}</TableCell>
-                  <TableCell>{formatDate(po.orderDate)}</TableCell>
-                  <TableCell>{formatDate(po.deliveryDate)}</TableCell>
-                  <TableCell>₹{po.amount}</TableCell>
-                  <TableCell>
-                    <Chip
-                      label={po.status || "Pending"}
-                      color={STATUS_COLOR[po.status] || "warning"}
-                      size="small"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      variant="outlined"
-                      size="medium"
-                      onClick={() => {
-                        setSelectedPurchaseOrder(po);
-                        setOpen(true);
-                      }}
-                    >
-                      View
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <DataTable columns={columns} rows={purchaseOrders} headerBg="#bbdefb" sx={{ mt: 3 }}/>
       )}
 
       <Dialog

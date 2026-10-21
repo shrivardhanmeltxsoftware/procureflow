@@ -16,6 +16,7 @@ import { getInvoices } from "../services/api";
 import { useState, useEffect } from "react";
 import { Navigate } from "react-router";
 import { formatDate } from "../utils/dateUtils";
+import { DataTable } from "../components/DataTable";
 
 const STATUS_COLOR = {
   pending: "warning",
@@ -51,6 +52,58 @@ export const Payments = () => {
     return <Navigate to="/" replace />;
   }
 
+  const columns = [
+    {
+      key: "invoiceNumber",
+      label: "Invoice Number",
+      render: (invoice) => invoice.invoiceNumber || "N/A",
+    },
+    {
+      key: "poNumber",
+      label: "PO Number",
+      render: (invoice) => invoice.poNumber || "N/A",
+    },
+    {
+      key: "uploadedDate",
+      label: "Invoice Date",
+      render: (invoice) => formatDate(invoice.uploadedDate),
+    },
+    {
+      key: "amount",
+      label: "Amount",
+      render: (invoice) =>
+        invoice.amount === null || invoice.amount === undefined
+          ? "N/A"
+          : `₹${Number(invoice.amount).toLocaleString("en-IN")}`,
+    },
+    {
+      key: "paymentDueDate",
+      label: "Payment Due Date",
+      render: (invoice) => formatDate(invoice.paymentDueDate),
+    },
+    {
+      key: "paymentStatus",
+      label: "Payment Status",
+      render: (invoice) => {
+        const status = invoice.paymentStatus?.toLowerCase() || "pending";
+
+        return (
+          <Chip
+            label={status}
+            color={STATUS_COLOR[status] || "warning"}
+            size="small"
+            sx={{ textTransform: "capitalize" }}
+          />
+        );
+      },
+    },
+    {
+      key: "paymentDate",
+      label: "Payment Date",
+      render: (invoice) => formatDate(invoice.paymentDate),
+    },
+  ];
+
   return (
     <Box>
       <Box>
@@ -68,43 +121,7 @@ export const Payments = () => {
           No payments are approved yet.
         </Typography>
       ) : (
-        <TableContainer component={Paper} sx={{ mt: 2 }}>
-          <Table sx={{ minWidth: 650 }} aria-label="POtable">
-            <TableHead>
-              <TableRow sx={{ backgroundColor: "#bbdefb" }}>
-                <TableCell>Invoice Number </TableCell>
-                <TableCell>PO Number</TableCell>
-                <TableCell>Invoice Date</TableCell>
-                <TableCell>Amount</TableCell>
-                <TableCell>Payment Due Date</TableCell>
-                <TableCell>Payment Status</TableCell>
-                <TableCell>Payment Date</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {invoices.map((purchase) => (
-                <TableRow key={purchase.id}>
-                  <TableCell>{purchase.invoiceNumber}</TableCell>
-                  <TableCell>{purchase.poNumber}</TableCell>
-                  <TableCell>{formatDate(purchase.uploadedDate)}</TableCell>
-                  <TableCell>{purchase.amount}</TableCell>
-                  <TableCell>{formatDate(purchase.paymentDueDate)}</TableCell>
-                  <TableCell>
-                    <Chip
-                      label={purchase.paymentStatus || "Pending"}
-                      color={
-                        STATUS_COLOR[purchase.paymentStatus?.toLowerCase()] ||
-                        "warning"
-                      }
-                      size="small"
-                    />
-                  </TableCell>
-                  <TableCell>{formatDate(purchase.paymentDate)}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <DataTable columns={columns} rows={invoices} headerBg="#bbdefb" />
       )}
     </Box>
   );
