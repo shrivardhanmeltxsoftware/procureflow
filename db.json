@@ -1,0 +1,1207 @@
+{
+  "vendors": [
+    {
+      "id": "DS6FOICPE9Z",
+      "businessName": "Sample Vendor",
+      "street": "123 Main St",
+      "street2": "",
+      "city": "New York",
+      "state": "NY",
+      "zip": "10001",
+      "country": "United States",
+      "firstName": "John",
+      "lastName": "Doe",
+      "dayPhone": "555-0100",
+      "eveningPhone": "555-0101",
+      "email": "vendor@example.com",
+      "password": "password123",
+      "serviceDetails": "Food and beverage services",
+      "establishmentDate": "2020-01-15",
+      "serviceArea": "New York City",
+      "businessType": "Restaurant",
+      "category": "Food & Beverage",
+      "insured": "yes",
+      "licensed": "yes",
+      "licenseNumber": "LIC-123456",
+      "grossSales": "500000",
+      "status": "inactive",
+      "affirm": true,
+      "createdAt": "2024-01-15T10:00:00Z"
+    },
+    {
+      "id": "DS6FOICPE9Y",
+      "businessName": "Apex Logistics LLC",
+      "street": "742 Evergreen Terrace",
+      "street2": "Suite 100",
+      "city": "Springfield",
+      "state": "IL",
+      "zip": "62706",
+      "country": "United States",
+      "firstName": "rick",
+      "lastName": "flair",
+      "dayPhone": "555-0198",
+      "eveningPhone": "555-0199",
+      "email": "rickflairapex@gmail.com",
+      "password": "password@12345",
+      "serviceDetails": "Freight forwarding, supply chain management, and regional warehousing services.",
+      "establishmentDate": "2013-05-14",
+      "serviceArea": "Midwest Region",
+      "businessType": "Limited Liability Company (LLC)",
+      "category": "Logistics",
+      "insured": "yes",
+      "licensed": "yes",
+      "licenseNumber": "LIC-987654321",
+      "grossSales": "1,200,000",
+      "status": "active",
+      "affirm": true,
+      "createdAt": "2026-04-20T10:36:00.814Z"
+    },
+    {
+      "id": "V1001",
+      "businessName": "Coastal Freight Solutions",
+      "street": "212 Harbor Blvd",
+      "street2": "",
+      "city": "Chennai",
+      "state": "TN",
+      "zip": "600001",
+      "country": "India",
+      "firstName": "Anita",
+      "lastName": "Rao",
+      "dayPhone": "555-0212",
+      "eveningPhone": "555-0213",
+      "email": "anita@coastalfreight.com",
+      "password": "coastal@123",
+      "serviceDetails": "Ocean freight and last-mile logistics for retail chains.",
+      "establishmentDate": "2016-03-10",
+      "serviceArea": "South India",
+      "businessType": "Logistics",
+      "category": "Logistics",
+      "insured": "yes",
+      "licensed": "yes",
+      "licenseNumber": "LIC-456123",
+      "grossSales": "850000",
+      "affirm": true,
+      "status": "active",
+      "createdAt": "2026-05-11T08:20:00Z"
+    },
+    {
+      "id": "V1002",
+      "businessName": "BuildRight Hardware Supplies",
+      "street": "88 Sector Road",
+      "street2": "Unit 4",
+      "city": "Nashik",
+      "state": "MH",
+      "zip": "422001",
+      "country": "India",
+      "firstName": "Vikram",
+      "lastName": "Mehta",
+      "dayPhone": "555-0301",
+      "eveningPhone": "555-0302",
+      "email": "vikram@buildright.com",
+      "password": "buildright@123",
+      "serviceDetails": "Hardware, tools, and construction materials supplier.",
+      "establishmentDate": "2019-11-22",
+      "serviceArea": "Maharashtra",
+      "businessType": "Hardware Supplier",
+      "category": "Hardware Supplier",
+      "insured": "yes",
+      "licensed": "no",
+      "licenseNumber": "",
+      "grossSales": "320000",
+      "affirm": true,
+      "status": "pending",
+      "createdAt": "2026-10-14T10:05:00Z"
+    },
+    {
+      "id": "V1003",
+      "businessName": "Greenleaf Packaging Co.",
+      "street": "15 Industrial Layout",
+      "street2": "",
+      "city": "Pune",
+      "state": "MH",
+      "zip": "411001",
+      "country": "India",
+      "firstName": "Sunita",
+      "lastName": "Iyer",
+      "dayPhone": "555-0410",
+      "eveningPhone": "555-0411",
+      "email": "sunita@greenleafpack.com",
+      "password": "greenleaf@123",
+      "serviceDetails": "Eco-friendly packaging materials and supplies.",
+      "establishmentDate": "2014-07-01",
+      "serviceArea": "Southern India",
+      "businessType": "Packaging",
+      "category": "Packaging",
+      "insured": "no",
+      "licensed": "yes",
+      "licenseNumber": "LIC-789456",
+      "grossSales": "420000",
+      "affirm": true,
+      "status": "inactive",
+      "createdAt": "2023-09-19T14:30:00Z"
+    },
+    {
+      "id": "V1004",
+      "businessName": "Sunrise Electricals Pvt. Ltd.",
+      "street": "21 MIDC Road",
+      "street2": "",
+      "city": "Pune",
+      "state": "MH",
+      "zip": "411019",
+      "country": "India",
+      "firstName": "Rahul",
+      "lastName": "Deshmukh",
+      "dayPhone": "98220 10456",
+      "eveningPhone": "98220 10457",
+      "email": "rahul@sunriseelectricals.com",
+      "password": "sunrise@123",
+      "serviceDetails": "Electrical fittings, cables, and industrial lighting supplies.",
+      "establishmentDate": "2015-02-18",
+      "serviceArea": "Maharashtra",
+      "businessType": "Electrical Supplier",
+      "category": "Electrical Supplier",
+      "insured": "yes",
+      "licensed": "yes",
+      "licenseNumber": "LIC-221904",
+      "grossSales": "640000",
+      "affirm": true,
+      "status": "active",
+      "createdAt": "2026-06-05T09:15:00Z"
+    },
+    {
+      "id": "V1005",
+      "businessName": "Kaveri Office Supplies",
+      "street": "9 Brigade Road",
+      "street2": "",
+      "city": "Bengaluru",
+      "state": "KA",
+      "zip": "560001",
+      "country": "India",
+      "firstName": "Meera",
+      "lastName": "Nair",
+      "dayPhone": "98450 33120",
+      "eveningPhone": "98450 33121",
+      "email": "meera@kaverioffice.com",
+      "password": "kaveri@123",
+      "serviceDetails": "Stationery, office furniture, and printer consumables.",
+      "establishmentDate": "2017-09-05",
+      "serviceArea": "Karnataka",
+      "businessType": "Office Supplier",
+      "category": "Office Supplier",
+      "insured": "yes",
+      "licensed": "yes",
+      "licenseNumber": "LIC-338017",
+      "grossSales": "480000",
+      "affirm": true,
+      "status": "active",
+      "createdAt": "2026-06-12T11:40:00Z"
+    },
+    {
+      "id": "V1006",
+      "businessName": "Horizon Safety Gear",
+      "street": "47 Ring Road",
+      "street2": "",
+      "city": "Nagpur",
+      "state": "MH",
+      "zip": "440001",
+      "country": "India",
+      "firstName": "Arjun",
+      "lastName": "Kulkarni",
+      "dayPhone": "98230 77815",
+      "eveningPhone": "98230 77816",
+      "email": "arjun@horizonsafety.com",
+      "password": "horizon@123",
+      "serviceDetails": "Industrial safety equipment and protective gear.",
+      "establishmentDate": "2021-04-12",
+      "serviceArea": "Central India",
+      "businessType": "Safety Equipment",
+      "category": "Safety Equipment",
+      "insured": "yes",
+      "licensed": "no",
+      "licenseNumber": "",
+      "grossSales": "210000",
+      "affirm": true,
+      "status": "pending",
+      "createdAt": "2026-10-16T08:50:00Z"
+    }
+  ],
+  "documents": [
+    {
+      "id": "D1001",
+      "vendorId": "DS6FOICPE9Y",
+      "companyName": "Northside Supplies Co.",
+      "documentType": "business_license",
+      "fileName": "business_license.pdf",
+      "fileSize": 182400,
+      "fileType": "application/pdf",
+      "uploadedAt": "2026-04-22T09:30:00Z",
+      "status": "approved"
+    },
+    {
+      "id": "D1002",
+      "vendorId": "DS6FOICPE9Y",
+      "companyName": "Northside Supplies Co.",
+      "documentType": "insurance_certificate",
+      "fileName": "insurance_certificate.pdf",
+      "fileSize": 154600,
+      "fileType": "application/pdf",
+      "uploadedAt": "2026-04-22T09:34:00Z",
+      "status": "approved"
+    },
+    {
+      "id": "D1003",
+      "vendorId": "DS6FOICPE9Y",
+      "companyName": "Northside Supplies Co.",
+      "documentType": "tax_registration",
+      "fileName": "tax_registration.pdf",
+      "fileSize": 128900,
+      "fileType": "application/pdf",
+      "uploadedAt": "2026-10-15T14:05:00Z",
+      "status": "pending"
+    },
+    {
+      "id": "D1004",
+      "vendorId": "V1001",
+      "companyName": "Coastal Enterprises",
+      "documentType": "business_license",
+      "fileName": "coastal_license.pdf",
+      "fileSize": 201300,
+      "fileType": "application/pdf",
+      "uploadedAt": "2026-05-12T10:10:00Z",
+      "status": "approved"
+    },
+    {
+      "id": "D1005",
+      "vendorId": "V1001",
+      "companyName": "Coastal Enterprises",
+      "documentType": "insurance_certificate",
+      "fileName": "coastal_insurance.pdf",
+      "fileSize": 97200,
+      "fileType": "application/pdf",
+      "uploadedAt": "2026-05-12T10:14:00Z",
+      "status": "rejected"
+    },
+    {
+      "id": "D1006",
+      "vendorId": "V1004",
+      "companyName": "Sunrise Traders",
+      "documentType": "business_license",
+      "fileName": "sunrise_license.pdf",
+      "fileSize": 176500,
+      "fileType": "application/pdf",
+      "uploadedAt": "2026-06-06T11:20:00Z",
+      "status": "approved"
+    },
+    {
+      "id": "D1007",
+      "vendorId": "V1005",
+      "companyName": "Kaveri Industries",
+      "documentType": "tax_registration",
+      "fileName": "kaveri_tax.pdf",
+      "fileSize": 143800,
+      "fileType": "application/pdf",
+      "uploadedAt": "2026-06-13T15:45:00Z",
+      "status": "approved"
+    },
+    {
+      "id": "D1008",
+      "vendorId": "V1002",
+      "companyName": "BuildRight Solutions",
+      "documentType": "business_license",
+      "fileName": "buildright_license.pdf",
+      "fileSize": 189700,
+      "fileType": "application/pdf",
+      "uploadedAt": "2026-10-14T12:00:00Z",
+      "status": "pending"
+    },
+    {
+      "id": "D1009",
+      "vendorId": "V1002",
+      "companyName": "BuildRight Solutions",
+      "documentType": "tax_registration",
+      "fileName": "buildright_tax.pdf",
+      "fileSize": 132400,
+      "fileType": "application/pdf",
+      "uploadedAt": "2026-10-14T12:03:00Z",
+      "status": "pending"
+    },
+    {
+      "id": "D1010",
+      "vendorId": "V1006",
+      "companyName": "Horizon Technologies",
+      "documentType": "insurance_certificate",
+      "fileName": "horizon_insurance.pdf",
+      "fileSize": 118600,
+      "fileType": "application/pdf",
+      "uploadedAt": "2026-10-16T09:40:00Z",
+      "status": "pending"
+    }
+  ],
+  "purchaseOrders": [
+    {
+      "id": "1",
+      "vendorId": "DS6FOICPE9Y",
+      "poNumber": "PO-1001",
+      "buyer": "Northside Supplies Co.",
+      "orderDate": "2026-05-04",
+      "deliveryDate": "2026-05-12",
+      "deliveryAddress": "7 Warehouse Lane, Pune",
+      "amount": 3200,
+      "status": "completed",
+      "deliveryStatus": "delivered",
+      "actualDeliveryDate": "2026-05-11",
+      "notes": "",
+      "items": [
+        {
+          "name": "Packaging tape rolls",
+          "qty": 80,
+          "unitPrice": 40,
+          "total": 3200
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "vendorId": "DS6FOICPE9Y",
+      "poNumber": "PO-1002",
+      "buyer": "Greenfield Traders",
+      "orderDate": "2026-05-12",
+      "deliveryDate": "2026-05-20",
+      "deliveryAddress": "18 Market Street, Mumbai",
+      "amount": 1500,
+      "status": "completed",
+      "deliveryStatus": "delivered",
+      "actualDeliveryDate": "2026-05-23",
+      "notes": "",
+      "items": [
+        {
+          "name": "Cardboard boxes",
+          "qty": 150,
+          "unitPrice": 10,
+          "total": 1500
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "vendorId": "V1001",
+      "poNumber": "PO-1003",
+      "buyer": "Metro Hardware Ltd.",
+      "orderDate": "2026-05-19",
+      "deliveryDate": "2026-05-29",
+      "deliveryAddress": "56 Industrial Estate, Nashik",
+      "amount": 4800,
+      "status": "rejected",
+      "deliveryStatus": "pending",
+      "actualDeliveryDate": null,
+      "notes": "Price mismatch, rejected.",
+      "items": [
+        { "name": "Cargo straps", "qty": 200, "unitPrice": 24, "total": 4800 }
+      ]
+    },
+    {
+      "id": "4",
+      "vendorId": "DS6FOICPE9Y",
+      "poNumber": "PO-1004",
+      "buyer": "Northside Supplies Co.",
+      "orderDate": "2026-06-02",
+      "deliveryDate": "2026-06-10",
+      "deliveryAddress": "7 Warehouse Lane, Pune",
+      "amount": 2100,
+      "status": "completed",
+      "deliveryStatus": "delivered",
+      "actualDeliveryDate": "2026-06-09",
+      "notes": "",
+      "items": [
+        { "name": "Wrenches set", "qty": 30, "unitPrice": 70, "total": 2100 }
+      ]
+    },
+    {
+      "id": "5",
+      "vendorId": "V1001",
+      "poNumber": "PO-1005",
+      "buyer": "Greenfield Traders",
+      "orderDate": "2026-06-09",
+      "deliveryDate": "2026-06-18",
+      "deliveryAddress": "18 Market Street, Mumbai",
+      "amount": 16000,
+      "status": "completed",
+      "deliveryStatus": "delivered",
+      "actualDeliveryDate": "2026-06-18",
+      "notes": "Customs paperwork to accompany the shipment.",
+      "items": [
+        {
+          "name": "Container handling",
+          "qty": 4,
+          "unitPrice": 3500,
+          "total": 14000
+        },
+        { "name": "Container seals", "qty": 40, "unitPrice": 50, "total": 2000 }
+      ]
+    },
+    {
+      "id": "6",
+      "vendorId": "V1004",
+      "poNumber": "PO-1006",
+      "buyer": "Metro Hardware Ltd.",
+      "orderDate": "2026-06-16",
+      "deliveryDate": "2026-06-24",
+      "deliveryAddress": "56 Industrial Estate, Nashik",
+      "amount": 4200,
+      "status": "completed",
+      "deliveryStatus": "delivered",
+      "actualDeliveryDate": "2026-06-26",
+      "notes": "",
+      "items": [
+        {
+          "name": "Electrical fittings",
+          "qty": 120,
+          "unitPrice": 35,
+          "total": 4200
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "vendorId": "V1005",
+      "poNumber": "PO-1007",
+      "buyer": "Northside Supplies Co.",
+      "orderDate": "2026-06-23",
+      "deliveryDate": "2026-07-01",
+      "deliveryAddress": "7 Warehouse Lane, Pune",
+      "amount": 19200,
+      "status": "completed",
+      "deliveryStatus": "delivered",
+      "actualDeliveryDate": "2026-06-30",
+      "notes": "",
+      "items": [
+        {
+          "name": "A4 paper reams",
+          "qty": 80,
+          "unitPrice": 240,
+          "total": 19200
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "vendorId": "DS6FOICPE9Y",
+      "poNumber": "PO-1008",
+      "buyer": "Greenfield Traders",
+      "orderDate": "2026-07-03",
+      "deliveryDate": "2026-07-11",
+      "deliveryAddress": "18 Market Street, Mumbai",
+      "amount": 3400,
+      "status": "completed",
+      "deliveryStatus": "delivered",
+      "actualDeliveryDate": "2026-07-10",
+      "notes": "",
+      "items": [
+        { "name": "Storage bins", "qty": 40, "unitPrice": 85, "total": 3400 }
+      ]
+    },
+    {
+      "id": "9",
+      "vendorId": "V1001",
+      "poNumber": "PO-1009",
+      "buyer": "Northside Supplies Co.",
+      "orderDate": "2026-07-14",
+      "deliveryDate": "2026-07-24",
+      "deliveryAddress": "7 Warehouse Lane, Pune",
+      "amount": 15000,
+      "status": "completed",
+      "deliveryStatus": "delivered",
+      "actualDeliveryDate": "2026-07-23",
+      "notes": "",
+      "items": [
+        {
+          "name": "Last-mile delivery runs",
+          "qty": 25,
+          "unitPrice": 600,
+          "total": 15000
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "vendorId": "V1004",
+      "poNumber": "PO-1010",
+      "buyer": "Metro Hardware Ltd.",
+      "orderDate": "2026-07-22",
+      "deliveryDate": "2026-07-30",
+      "deliveryAddress": "56 Industrial Estate, Nashik",
+      "amount": 2650,
+      "status": "completed",
+      "deliveryStatus": "delivered",
+      "actualDeliveryDate": "2026-07-29",
+      "notes": "",
+      "items": [
+        {
+          "name": "LED work lights",
+          "qty": 25,
+          "unitPrice": 106,
+          "total": 2650
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "vendorId": "DS6FOICPE9Y",
+      "poNumber": "PO-1011",
+      "buyer": "Northside Supplies Co.",
+      "orderDate": "2026-08-05",
+      "deliveryDate": "2026-08-14",
+      "deliveryAddress": "7 Warehouse Lane, Pune",
+      "amount": 14500,
+      "status": "completed",
+      "deliveryStatus": "delivered",
+      "actualDeliveryDate": "2026-08-13",
+      "notes": "Please confirm delivery slot 2 days in advance.",
+      "items": [
+        { "name": "Steel pipes", "qty": 60, "unitPrice": 200, "total": 12000 },
+        {
+          "name": "Delivery charge",
+          "qty": 1,
+          "unitPrice": 2500,
+          "total": 2500
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "vendorId": "V1005",
+      "poNumber": "PO-1012",
+      "buyer": "Greenfield Traders",
+      "orderDate": "2026-08-12",
+      "deliveryDate": "2026-08-20",
+      "deliveryAddress": "18 Market Street, Mumbai",
+      "amount": 27000,
+      "status": "completed",
+      "deliveryStatus": "delivered",
+      "actualDeliveryDate": "2026-08-21",
+      "notes": "",
+      "items": [
+        {
+          "name": "Printer cartridges",
+          "qty": 30,
+          "unitPrice": 900,
+          "total": 27000
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "vendorId": "V1003",
+      "poNumber": "PO-1013",
+      "buyer": "Metro Hardware Ltd.",
+      "orderDate": "2026-08-18",
+      "deliveryDate": "2026-08-27",
+      "deliveryAddress": "56 Industrial Estate, Nashik",
+      "amount": 5400,
+      "status": "completed",
+      "deliveryStatus": "delivered",
+      "actualDeliveryDate": "2026-08-26",
+      "notes": "",
+      "items": [
+        {
+          "name": "Eco packaging boxes",
+          "qty": 300,
+          "unitPrice": 18,
+          "total": 5400
+        }
+      ]
+    },
+    {
+      "id": "14",
+      "vendorId": "DS6FOICPE9Y",
+      "poNumber": "PO-1014",
+      "buyer": "Northside Supplies Co.",
+      "orderDate": "2026-08-26",
+      "deliveryDate": "2026-09-03",
+      "deliveryAddress": "7 Warehouse Lane, Pune",
+      "amount": 1800,
+      "status": "completed",
+      "deliveryStatus": "delivered",
+      "actualDeliveryDate": "2026-09-02",
+      "notes": "",
+      "items": [
+        { "name": "Hand trucks", "qty": 6, "unitPrice": 300, "total": 1800 }
+      ]
+    },
+    {
+      "id": "15",
+      "vendorId": "DS6FOICPE9Y",
+      "poNumber": "PO-1015",
+      "buyer": "Greenfield Traders",
+      "orderDate": "2026-09-02",
+      "deliveryDate": "2026-09-11",
+      "deliveryAddress": "18 Market Street, Mumbai",
+      "amount": 6000,
+      "status": "completed",
+      "deliveryStatus": "delivered",
+      "actualDeliveryDate": "2026-09-14",
+      "notes": "",
+      "items": [
+        {
+          "name": "Industrial shelving units",
+          "qty": 10,
+          "unitPrice": 600,
+          "total": 6000
+        }
+      ]
+    },
+    {
+      "id": "16",
+      "vendorId": "V1001",
+      "poNumber": "PO-1016",
+      "buyer": "Metro Hardware Ltd.",
+      "orderDate": "2026-09-10",
+      "deliveryDate": "2026-09-19",
+      "deliveryAddress": "56 Industrial Estate, Nashik",
+      "amount": 7000,
+      "status": "accepted",
+      "deliveryStatus": "delayed",
+      "actualDeliveryDate": null,
+      "notes": "Port congestion reported.",
+      "items": [
+        {
+          "name": "Container handling",
+          "qty": 2,
+          "unitPrice": 3500,
+          "total": 7000
+        }
+      ]
+    },
+    {
+      "id": "17",
+      "vendorId": "DS6FOICPE9Y",
+      "poNumber": "PO-1017",
+      "buyer": "Northside Supplies Co.",
+      "orderDate": "2026-09-17",
+      "deliveryDate": "2026-09-26",
+      "deliveryAddress": "7 Warehouse Lane, Pune",
+      "amount": 950,
+      "status": "completed",
+      "deliveryStatus": "delivered",
+      "actualDeliveryDate": "2026-09-25",
+      "notes": "",
+      "items": [
+        { "name": "Safety gloves", "qty": 100, "unitPrice": 9.5, "total": 950 }
+      ]
+    },
+    {
+      "id": "18",
+      "vendorId": "V1004",
+      "poNumber": "PO-1018",
+      "buyer": "Greenfield Traders",
+      "orderDate": "2026-09-24",
+      "deliveryDate": "2026-10-03",
+      "deliveryAddress": "18 Market Street, Mumbai",
+      "amount": 9600,
+      "status": "completed",
+      "deliveryStatus": "delivered",
+      "actualDeliveryDate": "2026-10-02",
+      "notes": "",
+      "items": [
+        {
+          "name": "Extension cables",
+          "qty": 80,
+          "unitPrice": 120,
+          "total": 9600
+        }
+      ]
+    },
+    {
+      "id": "19",
+      "vendorId": "DS6FOICPE9Y",
+      "poNumber": "PO-1019",
+      "buyer": "Northside Supplies Co.",
+      "orderDate": "2026-10-02",
+      "deliveryDate": "2026-10-12",
+      "deliveryAddress": "7 Warehouse Lane, Pune",
+      "amount": 5200,
+      "status": "completed",
+      "deliveryStatus": "delivered",
+      "actualDeliveryDate": "2026-10-11",
+      "notes": "",
+      "items": [
+        {
+          "name": "Forklift pallets",
+          "qty": 65,
+          "unitPrice": 80,
+          "total": 5200
+        }
+      ]
+    },
+    {
+      "id": "20",
+      "vendorId": "DS6FOICPE9Y",
+      "poNumber": "PO-1020",
+      "buyer": "Metro Hardware Ltd.",
+      "orderDate": "2026-10-05",
+      "deliveryDate": "2026-10-15",
+      "deliveryAddress": "56 Industrial Estate, Nashik",
+      "amount": 4800,
+      "status": "rejected",
+      "deliveryStatus": "pending",
+      "actualDeliveryDate": null,
+      "notes": "Price mismatch, rejected.",
+      "items": [
+        { "name": "Steel brackets", "qty": 200, "unitPrice": 24, "total": 4800 }
+      ]
+    },
+    {
+      "id": "21",
+      "vendorId": "DS6FOICPE9Y",
+      "poNumber": "PO-1021",
+      "buyer": "Greenfield Traders",
+      "orderDate": "2026-10-08",
+      "deliveryDate": "2026-10-24",
+      "deliveryAddress": "18 Market Street, Mumbai",
+      "amount": 12000,
+      "status": "accepted",
+      "deliveryStatus": "shipped",
+      "actualDeliveryDate": null,
+      "notes": "",
+      "items": [
+        {
+          "name": "Pallet racking units",
+          "qty": 8,
+          "unitPrice": 1500,
+          "total": 12000
+        }
+      ]
+    },
+    {
+      "id": "22",
+      "vendorId": "V1001",
+      "poNumber": "PO-1022",
+      "buyer": "Northside Supplies Co.",
+      "orderDate": "2026-10-12",
+      "deliveryDate": "2026-10-26",
+      "deliveryAddress": "7 Warehouse Lane, Pune",
+      "amount": 13500,
+      "status": "accepted",
+      "deliveryStatus": "pending",
+      "actualDeliveryDate": null,
+      "notes": "",
+      "items": [
+        {
+          "name": "Last-mile delivery runs",
+          "qty": 20,
+          "unitPrice": 600,
+          "total": 12000
+        },
+        { "name": "Cargo straps", "qty": 50, "unitPrice": 30, "total": 1500 }
+      ]
+    },
+    {
+      "id": "23",
+      "vendorId": "DS6FOICPE9Y",
+      "poNumber": "PO-1023",
+      "buyer": "Metro Hardware Ltd.",
+      "orderDate": "2026-10-15",
+      "deliveryDate": "2026-10-30",
+      "deliveryAddress": "56 Industrial Estate, Nashik",
+      "amount": 12000,
+      "status": "pending",
+      "deliveryStatus": "pending",
+      "actualDeliveryDate": null,
+      "notes": "Standard delivery, no special instructions.",
+      "items": [
+        { "name": "Steel pipes", "qty": 50, "unitPrice": 200, "total": 10000 },
+        {
+          "name": "Delivery charge",
+          "qty": 1,
+          "unitPrice": 2000,
+          "total": 2000
+        }
+      ]
+    },
+    {
+      "id": "24",
+      "vendorId": "DS6FOICPE9Y",
+      "poNumber": "PO-1024",
+      "buyer": "Northside Supplies Co.",
+      "orderDate": "2026-10-17",
+      "deliveryDate": "2026-10-31",
+      "deliveryAddress": "7 Warehouse Lane, Pune",
+      "amount": 2300,
+      "status": "pending",
+      "deliveryStatus": "pending",
+      "actualDeliveryDate": null,
+      "notes": "Handle with care — fragile packaging materials.",
+      "items": [
+        {
+          "name": "Packaging foam sheets",
+          "qty": 50,
+          "unitPrice": 25,
+          "total": 1250
+        },
+        {
+          "name": "Corner protectors",
+          "qty": 100,
+          "unitPrice": 6,
+          "total": 600
+        },
+        {
+          "name": "Office supplies kit",
+          "qty": 3,
+          "unitPrice": 150,
+          "total": 450
+        }
+      ]
+    },
+    {
+      "id": "25",
+      "vendorId": "V1005",
+      "poNumber": "PO-1025",
+      "buyer": "Greenfield Traders",
+      "orderDate": "2026-10-18",
+      "deliveryDate": "2026-10-29",
+      "deliveryAddress": "18 Market Street, Mumbai",
+      "amount": 21000,
+      "status": "pending",
+      "deliveryStatus": "pending",
+      "actualDeliveryDate": null,
+      "notes": "Call before delivery, gate access required.",
+      "items": [
+        {
+          "name": "Ergonomic chairs",
+          "qty": 6,
+          "unitPrice": 3500,
+          "total": 21000
+        }
+      ]
+    }
+  ],
+  "invoices": [
+    {
+      "id": "INV-2001",
+      "vendorId": "DS6FOICPE9Y",
+      "poId": "1",
+      "poNumber": "PO-1001",
+      "invoiceNumber": "INV-2001",
+      "amount": 3200,
+      "fileName": "invoice_2001.pdf",
+      "fileSize": 248320,
+      "fileType": "application/pdf",
+      "uploadedDate": "2026-05-14T10:00:00Z",
+      "status": "approved",
+      "paymentDueDate": "2026-05-28",
+      "paymentStatus": "paid",
+      "paymentDate": "2026-05-27"
+    },
+    {
+      "id": "INV-2002",
+      "vendorId": "DS6FOICPE9Y",
+      "poId": "2",
+      "poNumber": "PO-1002",
+      "invoiceNumber": "INV-2002",
+      "amount": 1500,
+      "fileName": "invoice_2002.pdf",
+      "fileSize": 231400,
+      "fileType": "application/pdf",
+      "uploadedDate": "2026-05-25T10:00:00Z",
+      "status": "approved",
+      "paymentDueDate": "2026-06-08",
+      "paymentStatus": "paid",
+      "paymentDate": "2026-06-06"
+    },
+    {
+      "id": "INV-2003",
+      "vendorId": "DS6FOICPE9Y",
+      "poId": "4",
+      "poNumber": "PO-1004",
+      "invoiceNumber": "INV-2003",
+      "amount": 2100,
+      "fileName": "invoice_2003.pdf",
+      "fileSize": 219800,
+      "fileType": "application/pdf",
+      "uploadedDate": "2026-06-11T10:00:00Z",
+      "status": "approved",
+      "paymentDueDate": "2026-06-25",
+      "paymentStatus": "paid",
+      "paymentDate": "2026-06-24"
+    },
+    {
+      "id": "INV-2004",
+      "vendorId": "V1001",
+      "poId": "5",
+      "poNumber": "PO-1005",
+      "invoiceNumber": "INV-2004",
+      "amount": 16000,
+      "fileName": "invoice_2004.pdf",
+      "fileSize": 265100,
+      "fileType": "application/pdf",
+      "uploadedDate": "2026-06-20T10:00:00Z",
+      "status": "approved",
+      "paymentDueDate": "2026-07-04",
+      "paymentStatus": "paid",
+      "paymentDate": "2026-07-03"
+    },
+    {
+      "id": "INV-2005",
+      "vendorId": "V1004",
+      "poId": "6",
+      "poNumber": "PO-1006",
+      "invoiceNumber": "INV-2005",
+      "amount": 4200,
+      "fileName": "invoice_2005.pdf",
+      "fileSize": 207600,
+      "fileType": "application/pdf",
+      "uploadedDate": "2026-06-28T10:00:00Z",
+      "status": "approved",
+      "paymentDueDate": "2026-07-12",
+      "paymentStatus": "paid",
+      "paymentDate": "2026-07-10"
+    },
+    {
+      "id": "INV-2006",
+      "vendorId": "V1005",
+      "poId": "7",
+      "poNumber": "PO-1007",
+      "invoiceNumber": "INV-2006",
+      "amount": 19200,
+      "fileName": "invoice_2006.pdf",
+      "fileSize": 243900,
+      "fileType": "application/pdf",
+      "uploadedDate": "2026-07-02T10:00:00Z",
+      "status": "approved",
+      "paymentDueDate": "2026-07-16",
+      "paymentStatus": "paid",
+      "paymentDate": "2026-07-15"
+    },
+    {
+      "id": "INV-2007",
+      "vendorId": "DS6FOICPE9Y",
+      "poId": "8",
+      "poNumber": "PO-1008",
+      "invoiceNumber": "INV-2007",
+      "amount": 3400,
+      "fileName": "invoice_2007.pdf",
+      "fileSize": 226700,
+      "fileType": "application/pdf",
+      "uploadedDate": "2026-07-12T10:00:00Z",
+      "status": "approved",
+      "paymentDueDate": "2026-07-26",
+      "paymentStatus": "paid",
+      "paymentDate": "2026-07-25"
+    },
+    {
+      "id": "INV-2008",
+      "vendorId": "V1001",
+      "poId": "9",
+      "poNumber": "PO-1009",
+      "invoiceNumber": "INV-2008",
+      "amount": 15000,
+      "fileName": "invoice_2008.pdf",
+      "fileSize": 251200,
+      "fileType": "application/pdf",
+      "uploadedDate": "2026-07-25T10:00:00Z",
+      "status": "approved",
+      "paymentDueDate": "2026-08-08",
+      "paymentStatus": "paid",
+      "paymentDate": "2026-08-07"
+    },
+    {
+      "id": "INV-2009",
+      "vendorId": "DS6FOICPE9Y",
+      "poId": "11",
+      "poNumber": "PO-1011",
+      "invoiceNumber": "INV-2009",
+      "amount": 14500,
+      "fileName": "invoice_2009.pdf",
+      "fileSize": 258400,
+      "fileType": "application/pdf",
+      "uploadedDate": "2026-08-15T10:00:00Z",
+      "status": "approved",
+      "paymentDueDate": "2026-08-29",
+      "paymentStatus": "paid",
+      "paymentDate": "2026-08-28"
+    },
+    {
+      "id": "INV-2010",
+      "vendorId": "V1005",
+      "poId": "12",
+      "poNumber": "PO-1012",
+      "invoiceNumber": "INV-2010",
+      "amount": 27000,
+      "fileName": "invoice_2010.pdf",
+      "fileSize": 262800,
+      "fileType": "application/pdf",
+      "uploadedDate": "2026-08-22T10:00:00Z",
+      "status": "approved",
+      "paymentDueDate": "2026-09-05",
+      "paymentStatus": "paid",
+      "paymentDate": "2026-09-04"
+    },
+    {
+      "id": "INV-2011",
+      "vendorId": "DS6FOICPE9Y",
+      "poId": "14",
+      "poNumber": "PO-1014",
+      "invoiceNumber": "INV-2011",
+      "amount": 1800,
+      "fileName": "invoice_2011.pdf",
+      "fileSize": 214500,
+      "fileType": "application/pdf",
+      "uploadedDate": "2026-09-03T10:00:00Z",
+      "status": "approved",
+      "paymentDueDate": "2026-09-17",
+      "paymentStatus": "approved",
+      "paymentDate": null
+    },
+    {
+      "id": "INV-2012",
+      "vendorId": "DS6FOICPE9Y",
+      "poId": "15",
+      "poNumber": "PO-1015",
+      "invoiceNumber": "INV-2012",
+      "amount": 6000,
+      "fileName": "invoice_2012.pdf",
+      "fileSize": 236900,
+      "fileType": "application/pdf",
+      "uploadedDate": "2026-09-15T10:00:00Z",
+      "status": "approved",
+      "paymentDueDate": "2026-09-29",
+      "paymentStatus": "pending",
+      "paymentDate": null
+    },
+    {
+      "id": "INV-2013",
+      "vendorId": "DS6FOICPE9Y",
+      "poId": "17",
+      "poNumber": "PO-1017",
+      "invoiceNumber": "INV-2013",
+      "amount": 950,
+      "fileName": "invoice_2013.pdf",
+      "fileSize": 198300,
+      "fileType": "application/pdf",
+      "uploadedDate": "2026-09-26T10:00:00Z",
+      "status": "pending",
+      "paymentDueDate": null,
+      "paymentStatus": null,
+      "paymentDate": null
+    },
+    {
+      "id": "INV-2014",
+      "vendorId": "V1004",
+      "poId": "18",
+      "poNumber": "PO-1018",
+      "invoiceNumber": "INV-2014",
+      "amount": 9600,
+      "fileName": "invoice_2014.pdf",
+      "fileSize": 241700,
+      "fileType": "application/pdf",
+      "uploadedDate": "2026-10-03T10:00:00Z",
+      "status": "approved",
+      "paymentDueDate": "2026-10-17",
+      "paymentStatus": "approved",
+      "paymentDate": null
+    },
+    {
+      "id": "INV-2015",
+      "vendorId": "V1003",
+      "poId": "13",
+      "poNumber": "PO-1013",
+      "invoiceNumber": "INV-2015",
+      "amount": 5600,
+      "fileName": "invoice_2015.pdf",
+      "fileSize": 203100,
+      "fileType": "application/pdf",
+      "uploadedDate": "2026-08-28T10:00:00Z",
+      "status": "rejected",
+      "rejectionReason": "Invoice amount does not match the purchase order.",
+      "paymentDueDate": null,
+      "paymentStatus": null,
+      "paymentDate": null
+    },
+    {
+      "id": "4qBw9ttH8p4",
+      "vendorId": "DS6FOICPE9Y",
+      "poId": "19",
+      "poNumber": "PO-1019",
+      "invoiceNumber": "INV-5005",
+      "amount": 5200,
+      "fileName": "RFID.txt",
+      "fileSize": 244,
+      "fileType": "text/plain",
+      "fileData": "data:text/plain;base64,T3Jpb24gUmZpZCBTb2x1dGlvbnMvTWVkaWF0ZWNoIElubm92YXRpb25zIC0gODA0ODI2NDUzNQ0KRWxlY3Ryb3RyYWRlcyAtIDgwNDgyNjI4MDgNClNlc2hhYXNhaSBUZWNobm9sb2dpZXMgTGltaXRlZCAtIDg5NzY3NzcyOTkNCnNya2lubm92YXRpb25zIC0gODQxMTk1ODMwMCAtIG1pbmltdW0gMzAwMA0KTSB0ZWNoIGlubm92YXRpb25zIC0gNzk0NzQyOTE0NQ0KU2F0byBBcmdveCBJbmRpYSBQdnQgTHRkIC0gNzQ5MDAyMTY0MA==",
+      "uploadedDate": "2026-10-12T12:14:06.989Z",
+      "status": "pending",
+      "paymentDueDate": null,
+      "paymentStatus": null,
+      "paymentDate": null
+    }
+  ],
+  "messages": [
+    {
+      "id": "1",
+      "vendorId": "DS6FOICPE9Y",
+      "sender": "admin",
+      "text": "Please upload the invoice for PO-1019, it was delivered on 10/11.",
+      "timestamp": "2026-10-12T10:00:00Z"
+    },
+    {
+      "id": "2",
+      "vendorId": "DS6FOICPE9Y",
+      "sender": "vendor",
+      "text": "Uploaded. Please review it when you get a chance.",
+      "timestamp": "2026-10-12T11:30:00Z"
+    },
+    {
+      "id": "3",
+      "vendorId": "DS6FOICPE9Y",
+      "sender": "vendor",
+      "text": "Could you confirm the delivery slot for PO-1021?",
+      "timestamp": "2026-10-14T09:12:00Z"
+    },
+    {
+      "id": "4",
+      "vendorId": "DS6FOICPE9Y",
+      "sender": "admin",
+      "text": "The Mumbai warehouse accepts deliveries 9 AM to 5 PM on weekdays.",
+      "timestamp": "2026-10-14T09:40:00Z"
+    },
+    {
+      "id": "5",
+      "vendorId": "DS6FOICPE9Y",
+      "sender": "vendor",
+      "text": "Thanks. We will dispatch on 10/20.",
+      "timestamp": "2026-10-14T10:05:00Z"
+    },
+    {
+      "id": "6",
+      "vendorId": "DS6FOICPE9Y",
+      "sender": "admin",
+      "text": "New POs PO-1023 and PO-1024 have been raised. Please accept or reject them.",
+      "timestamp": "2026-10-17T15:20:00Z"
+    },
+    {
+      "id": "7",
+      "vendorId": "V1001",
+      "sender": "admin",
+      "text": "PO-1016 is past its expected delivery date. Can you share an update?",
+      "timestamp": "2026-09-22T10:15:00Z"
+    },
+    {
+      "id": "8",
+      "vendorId": "V1001",
+      "sender": "vendor",
+      "text": "Port congestion is delaying the shipment. We expect delivery within a week.",
+      "timestamp": "2026-09-22T12:00:00Z"
+    }
+  ],
+  "admins": [
+    {
+      "id": "ADM001",
+      "name": "Priya Sharma",
+      "email": "admin@procureflow.com",
+      "password": "procureflow@Admin123",
+      "role": "super_admin",
+      "createdAt": "2026-01-01T09:00:00Z"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
