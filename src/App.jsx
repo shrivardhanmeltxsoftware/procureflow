@@ -1,31 +1,29 @@
-import React from "react";
+import { Box, CircularProgress } from "@mui/material";
 import { Login } from "./vendor/Login";
-import { createBrowserRouter, RouterProvider } from "react-router";
 import { Register } from "./vendor/Register";
-import { Dashboard } from "./vendor/Dashboard";
-import { Profile } from "./vendor/Profile";
-import { Documents } from "./vendor/Documents";
-import { PurchaseOrders } from "./vendor/PurchaseOrders";
-import { Deliveries } from "./vendor/Deliveries";
-import { Invoices } from "./vendor/Invoices";
-import { Payments } from "./vendor/Payments";
-import { Messages } from "./vendor/Messages";
-import { AdminLogin } from "./Admin/AdminLogin";
-import { DashboardChart } from "./vendor/DashboardChart";
-import AdminLayout from "./Layout/AdminLayout";
-import { AdminDashboard } from "./Admin/AdminDashboard";
-import { AdminVendors } from "./Admin/AdminVendors";
-import { AdminPurchaseOrders } from "./Admin/AdminPurchaseOrders";
-import { AdminDeliveries } from "./Admin/AdminDeliveries";
-import { AdminInvoices } from "./Admin/AdminInvoices";
-import { AdminPayments } from "./Admin/AdminPayments";
-import { AdminDocuments } from "./Admin/AdminDocuments";
-import { AdminMessages } from "./Admin/AdminMessages";
-import AdminThemeWrapper from "./Layout/AdminThemeWrapper";
-import { AdminVendorDetails } from "./Admin/AdminVendorDetails";
-import { AddVendor } from "./Admin/AdminAddVendor";
-import { AdminCreatePO } from "./Admin/AdminCreatePO";
-import { AdminPODetails } from "./Admin/AdminPODetails";
+import { createBrowserRouter, RouterProvider } from "react-router";
+
+const LoadingFallback = () => (
+  <Box
+    sx={{
+      minHeight: "100vh",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    }}
+  >
+    <CircularProgress />
+  </Box>
+);
+
+const lazyRoute = (loadModule, exportName) => ({
+  lazy: async () => {
+    const module = await loadModule();
+    return { Component: module[exportName] };
+  },
+  HydrateFallback: LoadingFallback,
+});
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -37,113 +35,147 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    Component: Dashboard,
+    ...lazyRoute(() => import("./vendor/Dashboard"), "Dashboard"),
     children: [
       {
         index: true,
-        Component: DashboardChart,
+        ...lazyRoute(() => import("./vendor/DashboardChart"), "DashboardChart"),
       },
       {
         path: "overview",
-        Component: DashboardChart,
+        ...lazyRoute(() => import("./vendor/DashboardChart"), "DashboardChart"),
       },
       {
         path: "profile",
-        Component: Profile,
+        ...lazyRoute(() => import("./vendor/Profile"), "Profile"),
       },
       {
         path: "documents",
-        Component: Documents,
+        ...lazyRoute(() => import("./vendor/Documents"), "Documents"),
       },
       {
         path: "purchase-orders",
-        Component: PurchaseOrders,
+        ...lazyRoute(
+          () => import("./vendor/PurchaseOrders"),
+          "PurchaseOrders",
+        ),
       },
       {
         path: "deliveries",
-        Component: Deliveries,
+        ...lazyRoute(() => import("./vendor/Deliveries"), "Deliveries"),
       },
       {
         path: "invoices",
-        Component: Invoices,
+        ...lazyRoute(() => import("./vendor/Invoices"), "Invoices"),
       },
       {
         path: "payments",
-        Component: Payments,
+        ...lazyRoute(() => import("./vendor/Payments"), "Payments"),
       },
       {
         path: "messages",
-        Component: Messages,
+        ...lazyRoute(() => import("./vendor/Messages"), "Messages"),
       },
     ],
   },
-  //admin routes from here
+  // Admin routes from here
   {
     path: "/admin-login",
-    Component: AdminThemeWrapper,
-    children: [{ index: true, Component: AdminLogin }],
-  },
-  {
-    path: "/admin",
-    Component: AdminLayout,
+    ...lazyRoute(
+      () => import("./Layout/AdminThemeWrapper"),
+      "default",
+    ),
     children: [
       {
         index: true,
-        Component: AdminDashboard,
+        ...lazyRoute(() => import("./Admin/AdminLogin"), "AdminLogin"),
+      },
+    ],
+  },
+  {
+    path: "/admin",
+    ...lazyRoute(() => import("./Layout/AdminLayout"), "default"),
+    children: [
+      {
+        index: true,
+        ...lazyRoute(
+          () => import("./Admin/AdminDashboard"),
+          "AdminDashboard",
+        ),
       },
       {
         path: "dashboard",
-        Component: AdminDashboard,
+        ...lazyRoute(
+          () => import("./Admin/AdminDashboard"),
+          "AdminDashboard",
+        ),
       },
       {
         path: "vendors",
-        Component: AdminVendors,
+        ...lazyRoute(() => import("./Admin/AdminVendors"), "AdminVendors"),
       },
       {
         path: "vendors/:id",
-        Component: AdminVendorDetails,
+        ...lazyRoute(
+          () => import("./Admin/AdminVendorDetails"),
+          "AdminVendorDetails",
+        ),
       },
       {
         path: "addVendor",
-        Component: AddVendor,
+        ...lazyRoute(() => import("./Admin/AdminAddVendor"), "AddVendor"),
       },
       {
         path: "purchase-orders",
-        Component: AdminPurchaseOrders,
+        ...lazyRoute(
+          () => import("./Admin/AdminPurchaseOrders"),
+          "AdminPurchaseOrders",
+        ),
       },
       {
         path: "purchase-orders/create",
-        Component: AdminCreatePO,
+        ...lazyRoute(
+          () => import("./Admin/AdminCreatePO"),
+          "AdminCreatePO",
+        ),
       },
       {
         path: "purchase-orders/:id",
-        Component: AdminPODetails,
+        ...lazyRoute(
+          () => import("./Admin/AdminPODetails"),
+          "AdminPODetails",
+        ),
       },
       {
         path: "deliveries",
-        Component: AdminDeliveries,
+        ...lazyRoute(
+          () => import("./Admin/AdminDeliveries"),
+          "AdminDeliveries",
+        ),
       },
       {
         path: "invoices",
-        Component: AdminInvoices,
+        ...lazyRoute(() => import("./Admin/AdminInvoices"), "AdminInvoices"),
       },
       {
         path: "payments",
-        Component: AdminPayments,
+        ...lazyRoute(() => import("./Admin/AdminPayments"), "AdminPayments"),
       },
       {
         path: "documents",
-        Component: AdminDocuments,
+        ...lazyRoute(
+          () => import("./Admin/AdminDocuments"),
+          "AdminDocuments",
+        ),
       },
       {
         path: "messages",
-        Component: AdminMessages,
+        ...lazyRoute(() => import("./Admin/AdminMessages"), "AdminMessages"),
       },
     ],
   },
 ]);
-const App = () => {
-  return <RouterProvider router={router} />;
-};
+
+const App = () => <RouterProvider router={router} />;
 
 export default App;
