@@ -120,7 +120,7 @@ export const DashboardChart = () => {
   return (
     <Grid container spacing={3}>
       <Grid size={{ xs: 12, md: 6 }}>
-        <Paper sx={{ p: 3 }}>
+        <Paper sx={{ p: { xs: 1.5, sm: 3 }, minWidth: 0 }}>
           <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
             Purchase Order Status
           </Typography>
@@ -129,30 +129,36 @@ export const DashboardChart = () => {
               No purchase orders yet.
             </Typography>
           ) : (
-            <ReactECharts
-              option={getPieOption(poStatusData)}
-              style={{ height: "300px", width: "100%" }}
-            />
+            <Box sx={{ height: { xs: 260, sm: 300 }, minWidth: 0 }}>
+              <ReactECharts
+                option={getPieOption(poStatusData)}
+                style={{ height: "100%", width: "100%" }}
+                autoResize
+              />
+            </Box>
           )}
         </Paper>
       </Grid>
 
       <Grid size={{ xs: 12, md: 6 }}>
-        <Paper sx={{ p: 3 }}>
+        <Paper sx={{ p: { xs: 1.5, sm: 3 }, minWidth: 0 }}>
           <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
             Payment Status (₹)
           </Typography>
           {paymentStatusData.length === 0 ? (
             <Typography color="text.secondary">No invoices yet.</Typography>
           ) : (
-            <ReactECharts
-              option={getPieOption(
-                paymentStatusData,
-                (params) =>
-                  `${params.name}: <b>₹${params.value.toLocaleString("en-IN")}</b> (${params.percent}%)`,
-              )}
-              style={{ height: "300px", width: "100%" }}
-            />
+            <Box sx={{ height: { xs: 260, sm: 300 }, minWidth: 0 }}>
+              <ReactECharts
+                option={getPieOption(
+                  paymentStatusData,
+                  (params) =>
+                    `${params.name}: <b>₹${params.value.toLocaleString("en-IN")}</b> (${params.percent}%)`,
+                )}
+                style={{ height: "100%", width: "100%" }}
+                autoResize
+              />
+            </Box>
           )}
         </Paper>
       </Grid>

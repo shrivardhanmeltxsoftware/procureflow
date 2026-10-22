@@ -343,6 +343,7 @@ export const AdminVendorDetails = () => {
     <Box
       sx={{
         height: "100%",
+        minWidth: 0,
         display: "flex",
         flexDirection: "column",
         overflowY: "auto",
@@ -368,13 +369,13 @@ export const AdminVendorDetails = () => {
         >
           <Box>
             <Stack
-              direction="row"
-              alignItems="center"
+              direction={{ xs: "column", sm: "row" }}
+              alignItems={{ xs: "flex-start", sm: "center" }}
               spacing={1.5}
               sx={{
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                minWidth: 0,
+                flexWrap: "wrap",
               }}
             >
               <Typography variant="h4" fontWeight="bold">
@@ -416,7 +417,7 @@ export const AdminVendorDetails = () => {
         sx={{ display: "flex", flexDirection: "column", gap: 3, pb: 4 }}
       >
         {/* ================= SECTION 4: Compliance & Account Status ================= */}
-        <Paper sx={{ p: 2, borderRadius: 2, boxShadow:1 }} elevation={2} >
+        <Paper sx={{ p: { xs: 1.5, sm: 2 }, borderRadius: 2, boxShadow: 1 }} elevation={2}>
           <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
             <VerifiedUserIcon color="primary" />
             <Typography variant="h6" fontWeight="bold">

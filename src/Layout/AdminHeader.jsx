@@ -9,11 +9,12 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router";
 import { useState } from "react";
 
-const AdminHeader = () => {
+const AdminHeader = ({ isMobile = false, onMenuClick = () => {} }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
@@ -32,7 +33,25 @@ const AdminHeader = () => {
       }}
     >
       <Toolbar>
-        <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: "bold" }}>
+        {isMobile && (
+          <IconButton
+            color="inherit"
+            edge="start"
+            aria-label="Open navigation menu"
+            onClick={onMenuClick}
+            sx={{ mr: 1 }}
+          >
+            <MenuIcon />
+          </IconButton>
+        )}
+        <Typography
+          variant="h6"
+          sx={{
+            flexGrow: 1,
+            fontWeight: "bold",
+            fontSize: { xs: "1.1rem", sm: "1.25rem" },
+          }}
+        >
           Admin Dashboard
         </Typography>
 

@@ -37,14 +37,16 @@ const menuItems = [
 
 const drawerWidth = 200;
 
-const AdminSidebar = () => {
+const AdminSidebar = ({ isMobile = false, open = false, onClose = () => {} }) => {
   return (
     <Drawer
-      variant="permanent"
+      variant={isMobile ? "temporary" : "permanent"}
       anchor="left"
+      open={isMobile ? open : undefined}
+      onClose={onClose}
+      ModalProps={{ keepMounted: true }}
       sx={{
-        width: drawerWidth,
-        flexShrink: 0,
+        ...(!isMobile && { width: drawerWidth, flexShrink: 0 }),
         "& .MuiDrawer-paper": {
           width: drawerWidth,
           boxSizing: "border-box",
@@ -59,6 +61,7 @@ const AdminSidebar = () => {
             key={item.path}
             component={NavLink}
             to={item.path}
+            onClick={isMobile ? onClose : undefined}
             sx={{
               "&:hover": {
                 backgroundColor: "#d1c4e9",

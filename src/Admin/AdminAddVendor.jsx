@@ -91,6 +91,7 @@ export const AddVendor = () => {
         flexDirection: "column",
         minHeight: "100%",
         width: "100%",
+        minWidth: 0,
         overflowY: "auto",
         overflowX: "hidden",
       }}
@@ -99,8 +100,9 @@ export const AddVendor = () => {
         <Box
           sx={{
             display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
             justifyContent: "space-between",
-            alignItems: "center",
+            alignItems: { xs: "stretch", sm: "center" },
             gap: 2,
           }}
         >
@@ -110,6 +112,7 @@ export const AddVendor = () => {
           <Box
             sx={{
               display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
               alignItems: "center",
               gap: 2,
               flexGrow: 1,
@@ -120,6 +123,7 @@ export const AddVendor = () => {
               variant="outlined"
               startIcon={<ArrowBackIcon />}
               onClick={() => navigate("/admin/vendors")}
+              sx={{ width: { xs: "100%", sm: "auto" } }}
             >
               Back to Vendors
             </Button>
@@ -546,5 +550,4 @@ export const AddVendor = () => {
     </Box>
   );
 };
-
 

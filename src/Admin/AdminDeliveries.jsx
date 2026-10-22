@@ -236,7 +236,7 @@ export const AdminDeliveries = () => {
         flexDirection: "column",
         height: "100%",
         width: "100%",
-        overflow: "hidden",
+        minWidth: 0,
       }}
     >
       {/* Fixed header */}
@@ -244,8 +244,9 @@ export const AdminDeliveries = () => {
         <Box
           sx={{
             display: "flex",
+            flexDirection: { xs: "column", md: "row" },
             justifyContent: "space-between",
-            alignItems: "center",
+            alignItems: { xs: "stretch", md: "center" },
             gap: 2,
           }}
         >
@@ -264,7 +265,7 @@ export const AdminDeliveries = () => {
             size="small"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            sx={{ width: 380 }}
+            sx={{ width: { xs: "100%", sm: 380 }, maxWidth: "100%" }}
             slotProps={{
               input: {
                 startAdornment: (

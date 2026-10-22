@@ -166,7 +166,14 @@ export const Documents = () => {
 
   return (
     <Box>
-      <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", sm: "row" },
+          alignItems: { xs: "stretch", sm: "center" },
+          gap: 1.5,
+        }}
+      >
         <Typography variant="h4" sx={{ fontWeight: "bold", flexGrow: 1 }}>
           Documents
         </Typography>
@@ -176,6 +183,7 @@ export const Documents = () => {
           color="primary"
           startIcon={<FileUploadIcon />}
           onClick={() => setOpen(true)}
+          sx={{ width: { xs: "100%", sm: "auto" } }}
         >
           Upload document
         </Button>

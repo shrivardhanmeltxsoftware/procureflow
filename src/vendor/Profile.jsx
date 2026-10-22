@@ -77,7 +77,7 @@ export const Profile = () => {
       </Box>
       <Divider sx={{ mt: 2 }} />
 
-      <Box sx={{ minHeight: "100vh" }}>
+      <Box sx={{ minWidth: 0 }}>
         <Box
           sx={{
             display: "flex",
@@ -97,7 +97,13 @@ export const Profile = () => {
         <Box
           component="form"
           onSubmit={handleSave}
-          sx={{ maxWidth: 900, mt: 2, mx: "auto" }}
+          sx={{
+            maxWidth: 900,
+            mt: 2,
+            mx: "auto",
+            width: "100%",
+            minWidth: 0,
+          }}
         >
           <Typography variant="h5" sx={{ mb: 2, fontWeight: "bold" }}>
             Edit Profile

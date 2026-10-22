@@ -16,7 +16,10 @@ export const Messages = () => {
         sx={{
           width: "100%",
           maxWidth: 995,
-          height: 540,
+          height: { xs: "calc(100dvh - 96px)", sm: 540 },
+          minHeight: 320,
+          maxHeight: 700,
+          minWidth: 0,
           display: "flex",
           flexDirection: "column",
           border: "1px solid #d9d9d9",
@@ -29,7 +32,7 @@ export const Messages = () => {
           sx={{
             display: "flex",
             alignItems: "center",
-            p: 2,
+            p: { xs: 1, sm: 2 },
             gap: 1,
             borderBottom: "1px solid #d9d9d9",
             bgcolor: "#d4ecff",
@@ -53,8 +56,8 @@ export const Messages = () => {
           sx={{
             display: "flex",
             alignItems: "center",
-            gap: 2,
-            p: 2,
+            gap: { xs: 1, sm: 2 },
+            p: { xs: 1, sm: 2 },
             mt: "auto",
             flexShrink: 0,
             bgcolor: "#d4ecff",
@@ -70,8 +73,8 @@ export const Messages = () => {
               borderRadius: 2,
               "& .MuiOutlinedInput-root": {
                 borderRadius: 2,
-                height: 56,
-                fontSize: 18,
+                height: { xs: 48, sm: 56 },
+                fontSize: { xs: 16, sm: 18 },
                 color: "#333",
               },
             }}
@@ -81,13 +84,13 @@ export const Messages = () => {
             variant="contained"
             disableElevation
             sx={{
-              minWidth: 110,
-              height: 56,
+              minWidth: { xs: 72, sm: 110 },
+              height: { xs: 48, sm: 56 },
               borderRadius: 2,
               bgcolor: "primary",
               color: "#fff",
               fontWeight: 700,
-              fontSize: 18,
+              fontSize: { xs: 16, sm: 18 },
               textTransform: "none",
               boxShadow: "none",
             }}

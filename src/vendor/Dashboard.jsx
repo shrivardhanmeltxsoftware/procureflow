@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Navigate, Outlet, useNavigate, useLocation } from "react-router";
+import { Navigate, Outlet, useNavigate } from "react-router";
 import {
   Box,
   AppBar,
@@ -21,8 +21,10 @@ import {
   DialogContent,
   DialogTitle,
   List,
+  useMediaQuery,
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
+import MenuIcon from "@mui/icons-material/Menu";
 import PersonIcon from "@mui/icons-material/Person";
 import DescriptionIcon from "@mui/icons-material/Description";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -60,9 +62,10 @@ export const Dashboard = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [openDialog, setOpenDialog] = useState(false);
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
   const drawerWidth = 200;
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.down("md"));
   const isAuthenticated = Boolean(localStorage.getItem("vendor"));
   const vendor = JSON.parse(localStorage.getItem("vendor"));
 
@@ -80,7 +83,7 @@ export const Dashboard = () => {
   const handleOpen = (e) => setAnchorEl(e.currentTarget);
   const handleClose = () => setAnchorEl(null);
   return (
-    <Box>
+    <Box sx={{ display: "flex", minHeight: "100vh" }}>
       <AppBar
         position="fixed"
         color="primary"
@@ -88,10 +91,24 @@ export const Dashboard = () => {
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
       >
         <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+          {isMobile && (
+            <IconButton
+              color="inherit"
+              edge="start"
+              aria-label="Open navigation menu"
+              onClick={() => setMobileDrawerOpen(true)}
+              sx={{ mr: 1 }}
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
+          <Typography
+            variant="h6"
+            sx={{ flexGrow: 1, fontSize: { xs: "1.05rem", sm: "1.25rem" } }}
+          >
             Vendor Dashboard
           </Typography>
-          <IconButton onClick={handleOpen}>
+          <IconButton onClick={handleOpen} aria-label="Open profile menu">
             <Avatar sx={{ width: 35, height: 35 }}></Avatar>
           </IconButton>
           <IconButton
@@ -143,10 +160,12 @@ export const Dashboard = () => {
 
       <Drawer
         anchor="left"
-        variant="permanent"
+        variant={isMobile ? "temporary" : "permanent"}
+        open={isMobile ? mobileDrawerOpen : undefined}
+        onClose={() => setMobileDrawerOpen(false)}
+        ModalProps={{ keepMounted: true }}
         sx={{
-          width: drawerWidth,
-          flexShrink: 0,
+          ...(!isMobile && { width: drawerWidth, flexShrink: 0 }),
           "& .MuiDrawer-paper": {
             width: drawerWidth,
             boxSizing: "border-box",
@@ -161,6 +180,7 @@ export const Dashboard = () => {
               key={item.path}
               component={NavLink}
               to={item.path}
+              onClick={isMobile ? () => setMobileDrawerOpen(false) : undefined}
               sx={{
                 "&:hover": {
                   backgroundColor: "#bbdefb",
@@ -184,9 +204,8 @@ export const Dashboard = () => {
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
-          width: `calc(100% - ${drawerWidth}px)`,
-          ml: `${drawerWidth}px`,
+          minWidth: 0,
+          p: { xs: 1.5, sm: 2, md: 3 },
           boxSizing: "border-box",
         }}
       >

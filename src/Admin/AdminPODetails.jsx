@@ -255,7 +255,8 @@ export const AdminPODetails = () => {
         flexDirection: "column",
         height: "100%",
         width: "100%",
-        overflow: "hidden",
+        minWidth: 0,
+        overflowX: "hidden",
       }}
     >
       {/* Fixed header */}
@@ -326,7 +327,7 @@ export const AdminPODetails = () => {
         )}
 
         {/* Order details */}
-        <Paper sx={{ p: 3, mb: 2 }}>
+        <Paper sx={{ p: { xs: 1.5, sm: 3 }, mb: 2 }}>
           <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
             Order details
           </Typography>
@@ -402,7 +403,7 @@ export const AdminPODetails = () => {
         </Paper>
 
         {/* Items */}
-        <Paper sx={{ p: 3, mb: 2 }}>
+        <Paper sx={{ p: { xs: 1.5, sm: 3 }, mb: 2 }}>
           <Box
             sx={{
               display: "flex",
@@ -577,7 +578,7 @@ export const AdminPODetails = () => {
         </Paper>
 
         {/* Notes */}
-        <Paper sx={{ p: 3, mb: 2 }}>
+        <Paper sx={{ p: { xs: 1.5, sm: 3 }, mb: 2 }}>
           <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1.5 }}>
             Notes
           </Typography>

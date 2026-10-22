@@ -61,8 +61,9 @@ export const AdminLogin = () => {
     <Box
       sx={{
         display: "flex",
-        height: "100dvh",
-        overflow: "hidden",
+        flexDirection: { xs: "column", md: "row" },
+        minHeight: "100dvh",
+        height: { xs: "auto", md: "100dvh" },
         position: "relative",
       }}
     >
@@ -72,7 +73,7 @@ export const AdminLogin = () => {
         sx={{
           position: "absolute",
           top: 16,
-          right: 24,
+          right: { xs: 12, sm: 24 },
           zIndex: 1,
         }}
         onClick={() => navigate("/")}
@@ -83,9 +84,10 @@ export const AdminLogin = () => {
       <Box
         component={Paper}
         sx={{
-          flex: "0 0 45%",
+          flex: { xs: "0 0 auto", md: "0 0 45%" },
+          width: { xs: "100%", md: "45%" },
           bgcolor: "#FFFFFF",
-          p: 4,
+          p: { xs: 2, sm: 3, md: 4 },
           display: "flex",
           flexDirection: "column",
           borderRadius: 0,
@@ -104,10 +106,11 @@ export const AdminLogin = () => {
             src={loginAdminImage}
             sx={{
               width: "100%",
-              height: "100%",
+              height: { xs: "auto", md: "100%" },
+              maxHeight: { xs: 180, md: "none" },
               objectFit: "cover",
-              display: "block",
-              mt: 12,
+              display: { xs: "none", md: "block" },
+              mt: { md: 12 },
             }}
           ></Box>
         </Box>
@@ -116,15 +119,22 @@ export const AdminLogin = () => {
       <Box
         sx={{
           flex: "1 1 55%",
+          minWidth: 0,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           bgcolor: "background.default",
+          p: { xs: 2, sm: 3, md: 0 },
         }}
       >
         <Paper
           elevation={3}
-          sx={{ p: 4, width: "100%", maxWidth: 500, minHeight: 400 }}
+          sx={{
+            p: { xs: 2.5, sm: 4 },
+            width: "100%",
+            maxWidth: 500,
+            minHeight: { xs: "auto", sm: 400 },
+          }}
         >
           <Typography
             variant="h5"

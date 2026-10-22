@@ -178,7 +178,14 @@ export const PurchaseOrders = () => {
         <DialogTitle
           sx={{ fontSize: { xs: 22, sm: 26 }, fontWeight: 700, pb: 1 }}
         >
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gap: 1,
+            }}
+          >
             PO Number -
             <Typography
               variant="h5"
@@ -197,7 +204,7 @@ export const PurchaseOrders = () => {
               size="medium"
             />
           </Box>
-          <Box sx={{ display: "flex", gap: 3 }}>
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: { xs: 1, sm: 3 } }}>
             <Typography
               variant="subtitle1"
               sx={{ color: "#616161", flexGrow: 1 }}
@@ -222,7 +229,7 @@ export const PurchaseOrders = () => {
             rowSpacing={1}
             columnSpacing={{ xs: 1, sm: 2, md: 8 }}
           >
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Typography variant="subtitle1" sx={{ color: "#616161" }}>
                 Raised by:
               </Typography>
@@ -234,7 +241,7 @@ export const PurchaseOrders = () => {
                 Admin - {selectedPurchaseOrder?.buyer}
               </Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Typography variant="subtitle1" sx={{ color: "#616161" }}>
                 Delivery address:
               </Typography>
@@ -304,7 +311,7 @@ export const PurchaseOrders = () => {
               selectedPurchaseOrder?.status === "pending"
                 ? "space-between"
                 : "flex-end",
-            flexWrap: "nowrap",
+            flexWrap: "wrap",
           }}
         >
           <Button variant="outlined" size="small" onClick={handleClose}>
@@ -312,7 +319,14 @@ export const PurchaseOrders = () => {
           </Button>
 
           {selectedPurchaseOrder?.status === "pending" && (
-            <Box sx={{ display: "flex", gap: 1, flexShrink: 0 }}>
+            <Box
+              sx={{
+                display: "flex",
+                gap: 1,
+                flexShrink: 0,
+                flexWrap: "wrap",
+              }}
+            >
               <Button
                 variant="contained"
                 color="error"

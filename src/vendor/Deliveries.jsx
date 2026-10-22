@@ -162,7 +162,14 @@ export const Deliveries = () => {
         <DialogTitle
           sx={{ fontSize: { xs: 22, sm: 26 }, fontWeight: 700, pb: 1 }}
         >
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gap: 1,
+            }}
+          >
             PO Number -
             <Typography
               variant="h5"
@@ -172,7 +179,7 @@ export const Deliveries = () => {
               [{selectedPurchaseOrder?.poNumber || ""}]
             </Typography>
           </Box>
-          <Box sx={{ display: "flex", gap: 3 }}>
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: { xs: 1, sm: 3 } }}>
             <Typography
               variant="subtitle1"
               sx={{ color: "#616161", flexGrow: 1 }}
@@ -197,7 +204,7 @@ export const Deliveries = () => {
             rowSpacing={1}
             columnSpacing={{ xs: 1, sm: 2, md: 8 }}
           >
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Typography variant="subtitle1" sx={{ color: "#616161" }}>
                 Raised by:
               </Typography>
@@ -209,7 +216,7 @@ export const Deliveries = () => {
                 Admin - {selectedPurchaseOrder?.buyer}
               </Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Typography variant="subtitle1" sx={{ color: "#616161" }}>
                 Delivery address:
               </Typography>
@@ -268,7 +275,7 @@ export const Deliveries = () => {
             {selectedPurchaseOrder?.notes}
           </Typography>
           <Divider sx={{ mt: 2 }} />
-          <Box sx={{ display: "flex" }}>
+          <Box sx={{ display: "flex", alignItems: "center", flexWrap: "wrap" }}>
             <Typography variant="subtitle1" sx={{ mt: 1, fontWeight: "bold" }}>
               Delivery Status :
             </Typography>

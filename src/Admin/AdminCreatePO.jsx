@@ -188,12 +188,20 @@ export const AdminCreatePO = () => {
         flexDirection: "column",
         height: "100%",
         width: "100%",
-        overflow: "hidden",
+        minWidth: 0,
+        overflowX: "hidden",
       }}
     >
       {/* Fixed header */}
       <Box sx={{ flexShrink: 0 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: 1.5,
+          }}
+        >
           <IconButton
             onClick={() => navigate("/admin/purchase-orders")}
             aria-label="Back"
@@ -201,7 +209,10 @@ export const AdminCreatePO = () => {
             <ArrowBackIcon />
           </IconButton>
           <Box sx={{ flexGrow: 1 }}>
-            <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+            <Typography
+              variant="h4"
+              sx={{ fontWeight: "bold", fontSize: { xs: "1.5rem", sm: "2.125rem" } }}
+            >
               Create Purchase Order
             </Typography>
             <Typography variant="subtitle2" color="text.secondary">
@@ -232,7 +243,7 @@ export const AdminCreatePO = () => {
             )}
 
             {/* Order details */}
-            <Paper sx={{ p: 3, mb: 2 }}>
+            <Paper sx={{ p: { xs: 1.5, sm: 3 }, mb: 2 }}>
               <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
                 Order details
               </Typography>
@@ -301,7 +312,7 @@ export const AdminCreatePO = () => {
             </Paper>
 
             {/* Items */}
-            <Paper sx={{ p: 3, mb: 2 }}>
+            <Paper sx={{ p: { xs: 1.5, sm: 3 }, mb: 2 }}>
               <Box
                 sx={{
                   display: "flex",
@@ -438,7 +449,7 @@ export const AdminCreatePO = () => {
             </Paper>
 
             {/* Notes */}
-            <Paper sx={{ p: 3, mb: 2 }}>
+            <Paper sx={{ p: { xs: 1.5, sm: 3 }, mb: 2 }}>
               <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1.5 }}>
                 Notes{" "}
                 <Typography

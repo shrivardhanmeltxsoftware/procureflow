@@ -215,6 +215,7 @@ export const AdminVendors = () => {
         flexDirection: "column",
         height: "100%",
         width: "100%",
+        minWidth: 0,
         overflow: "hidden",
       }}
     >
@@ -223,8 +224,9 @@ export const AdminVendors = () => {
         <Box
           sx={{
             display: "flex",
+            flexDirection: { xs: "column", md: "row" },
             justifyContent: "space-between",
-            alignItems: "center",
+            alignItems: { xs: "stretch", md: "center" },
             gap: 2,
           }}
         >
@@ -240,9 +242,11 @@ export const AdminVendors = () => {
           <Box
             sx={{
               display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
               alignItems: "center",
               gap: 2,
               flexGrow: 1,
+              minWidth: 0,
               justifyContent: "flex-end",
             }}
           >
@@ -252,7 +256,7 @@ export const AdminVendors = () => {
               size="small"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              sx={{ width: 380 }}
+              sx={{ width: { xs: "100%", sm: 380 }, maxWidth: "100%" }}
               slotProps={{
                 input: {
                   startAdornment: (
@@ -292,7 +296,11 @@ export const AdminVendors = () => {
               variant="contained"
               color="primary"
               startIcon={<AddBusinessIcon />}
-              sx={{ textTransform: "none", whiteSpace: "nowrap" }}
+              sx={{
+                textTransform: "none",
+                whiteSpace: "nowrap",
+                width: { xs: "100%", sm: "auto" },
+              }}
               onClick={() => navigate("/admin/addVendor")}
             >
               Add vendor
