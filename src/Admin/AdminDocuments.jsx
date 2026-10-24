@@ -2,24 +2,16 @@ import { useEffect, useState } from "react";
 import { formatDate } from "../utils/dateUtils";
 import {
   Box,
-  Paper,
   Stack,
   Typography,
   TextField,
   Button,
   Chip,
-  CircularProgress,
   Alert,
   Divider,
   Select,
   MenuItem,
   InputAdornment,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  TableContainer,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -36,14 +28,19 @@ import {
   DOCUMENT_STATUS_COLOR,
   getStatusColor,
 } from "../constants/statusColors";
+import { LoadingState } from "../components/common/LoadingState";
+import { ErrorState } from "../components/common/ErrorState";
+import EmptyState from "../components/common/EmptyState";
 
 export const AdminDocuments = () => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [documents, setDocuments] = useState([]);
   const [selectedMetadata, setSelectedMetadata] = useState(null);
+
+  const loadDocuments = () => getAllDocuments();
 
   const columns = [
     { key: "id", label: "Document ID" },
@@ -111,10 +108,9 @@ export const AdminDocuments = () => {
   ];
 
   const fetchDocuments = async () => {
-    setLoading(true);
-    setError("");
     try {
-      const data = await getAllDocuments();
+      const data = await loadDocuments();
+      setError("");
       setDocuments(data || []);
     } catch (err) {
       console.error(err);
@@ -125,8 +121,33 @@ export const AdminDocuments = () => {
   };
 
   useEffect(() => {
-    fetchDocuments();
+    let cancelled = false;
+    const loadDocuments = async () => {
+      try {
+        const data = await loadDocuments();
+        if (!cancelled) {
+          setDocuments(data || []);
+          setError("");
+        }
+      } catch (err) {
+        console.error(err);
+        if (!cancelled) setError("Failed to fetch vendors documents");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    loadDocuments();
+    return () => {
+      cancelled = true;
+    };
   }, []);
+
+  const retryFetchDocuments = () => {
+    setLoading(true);
+    setError("");
+    fetchDocuments();
+  };
 
   const handleStatusUpdate = async (docId, newStatus) => {
     try {
@@ -246,17 +267,26 @@ export const AdminDocuments = () => {
       </Box>
 
       {loading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", py: 5 }}>
-          <CircularProgress />
-        </Box>
+        <LoadingState message="Loading documents..." />
       ) : error ? (
-        <Typography color="error" sx={{ mt: 3 }}>
-          {error}
-        </Typography>
+        <ErrorState message={error} onRetry={retryFetchDocuments} />
       ) : filteredDocs.length === 0 ? (
-        <Typography color="text.secondary" sx={{ mt: 2 }}>
-          No documents found.
-        </Typography>
+        documents.length === 0 ? (
+          <EmptyState
+            title="No documents yet"
+            description="Vendor-submitted documents will appear here."
+          />
+        ) : (
+          <EmptyState
+            title="No documents match your search or filter"
+            description="Try changing or clearing your search and filter."
+            actionLabel="Clear filters"
+            onAction={() => {
+              setSearch("");
+              setFilter("all");
+            }}
+          />
+        )
       ) : (
         <DataTable columns={columns} rows={filteredDocs} />
       )}

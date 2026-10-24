@@ -30,6 +30,7 @@ import {
 } from "../services/AdminAPI";
 import { formatDate } from "../utils/dateUtils";
 import { normalizeStatus } from "../constants/statusColors";
+import EmptyState from "../components/common/EmptyState";
 
 const STATUS_COLORS = {
   pending: "#ED6C02",
@@ -531,9 +532,12 @@ export const AdminDashboard = () => {
               </Typography>
             </Box>
             {recentOrders.length === 0 ? (
-              <Typography color="text.secondary" sx={{ px: 2, pb: 2 }}>
-                No purchase orders found.
-              </Typography>
+              <EmptyState
+                title="No recent purchase orders"
+                description="New purchase orders will appear here."
+                actionLabel="Create PO"
+                onAction={() => navigate("/admin/purchase-orders/create")}
+              />
             ) : (
               <TableContainer sx={{ maxWidth: "100%", overflowX: "auto" }}>
                 <Table sx={{ minWidth: 820 }}>

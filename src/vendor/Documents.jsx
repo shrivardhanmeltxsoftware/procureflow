@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useCallback, useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -12,7 +12,7 @@ import {
   Select,
   MenuItem,
   Chip,
-  CircularProgress,
+  Alert,
 } from "@mui/material";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
@@ -23,6 +23,9 @@ import {
   DOCUMENT_STATUS_COLOR,
   getStatusColor,
 } from "../constants/statusColors";
+import { LoadingState } from "../components/common/LoadingState";
+import { ErrorState } from "../components/common/ErrorState";
+import EmptyState from "../components/common/EmptyState";
 
 const DOC_TYPE_LABELS = {
   business_license: "Business License",
@@ -44,26 +47,52 @@ export const Documents = () => {
   const [docType, setDocType] = useState("");
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const [loadError, setLoadError] = useState("");
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchDocuments = async () => {
-    try {
-      const vendor = JSON.parse(localStorage.getItem("vendor"));
-      if (vendor?.id) {
-        const data = await getDocuments(vendor.id);
-        setDocuments(data || []);
+  const loadDocuments = useCallback(async () => {
+    const vendor = JSON.parse(localStorage.getItem("vendor"));
+    return vendor?.id ? getDocuments(vendor.id) : [];
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      try {
+        const data = await loadDocuments();
+        if (!cancelled) {
+          setDocuments(data || []);
+          setLoadError("");
+        }
+      } catch (err) {
+        console.error(err);
+        if (!cancelled) {
+          setLoadError("Failed to load documents. Please try again.");
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
       }
+    };
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [loadDocuments]);
+
+  const retryFetchDocuments = async () => {
+    setLoading(true);
+    setLoadError("");
+    try {
+      setDocuments((await loadDocuments()) || []);
     } catch (err) {
       console.error(err);
+      setLoadError("Failed to load documents. Please try again.");
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchDocuments();
-  }, []);
 
   const columns = [
     {
@@ -156,7 +185,7 @@ export const Documents = () => {
       });
 
       handleClose();
-      fetchDocuments();
+      retryFetchDocuments();
     } catch (uploadError) {
       setError(uploadError.message || "Unable to upload document.");
     } finally {
@@ -191,13 +220,19 @@ export const Documents = () => {
       <Divider sx={{ mt: 2, mb: 3 }} />
 
       {loading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", py: 5 }}>
-          <CircularProgress />
-        </Box>
+        <LoadingState message="Loading documents..." />
+      ) : loadError ? (
+        <ErrorState message={loadError} onRetry={retryFetchDocuments} />
       ) : documents.length === 0 ? (
-        <Typography color="text.secondary">
-          No documents uploaded yet.
-        </Typography>
+        // <Typography color="text.secondary">
+        //   No documents uploaded yet.
+        // </Typography>
+        <EmptyState
+          title="No documents yet"
+          description="Documents you upload will appear here."
+          actionLabel="Upload document"
+          onAction={() => setOpen(true)}
+        />
       ) : (
         <DataTable columns={columns} rows={documents} headerBg="#bbdefb" />
       )}
@@ -340,11 +375,7 @@ export const Documents = () => {
             />
           </Box>
 
-          {error && (
-            <Typography color="error" sx={{ mt: 1, fontSize: 14 }}>
-              {error}
-            </Typography>
-          )}
+          {error && <Alert severity="error">{error}</Alert>}
         </DialogContent>
 
         <DialogActions

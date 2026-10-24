@@ -5,7 +5,6 @@ import {
   Divider,
   Button,
   Chip,
-  CircularProgress,
   Select,
   MenuItem,
   TextField,
@@ -19,7 +18,7 @@ import {
   Tooltip,
 } from "@mui/material";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import SearchIcon from "@mui/icons-material/Search";
@@ -38,6 +37,9 @@ import {
   getStatusColor,
   PO_STATUS_COLOR,
 } from "../constants/statusColors";
+import { LoadingState } from "../components/common/LoadingState";
+import { ErrorState } from "../components/common/ErrorState";
+import EmptyState from "../components/common/EmptyState";
 
 const formatCurrency = (amount) => {
   if (amount === null || amount === undefined) return "N/A";
@@ -48,20 +50,18 @@ export const AdminPurchaseOrders = () => {
   const navigate = useNavigate();
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [purchaseOrders, setPurchaseOrders] = useState([]);
   const [vendors, setVendors] = useState([]);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
+  const loadData = () => Promise.all([getAllPurchaseOrders(), getVendors()]);
+
   const fetchData = async () => {
-    setLoading(true);
-    setError("");
     try {
-      const [poData, vendorData] = await Promise.all([
-        getAllPurchaseOrders(),
-        getVendors(),
-      ]);
+      const [poData, vendorData] = await loadData();
+      setError("");
       setPurchaseOrders(poData || []);
       setVendors(vendorData || []);
     } catch (err) {
@@ -73,8 +73,36 @@ export const AdminPurchaseOrders = () => {
   };
 
   useEffect(() => {
-    fetchData();
+    let cancelled = false;
+    const loadData = async () => {
+      try {
+        const [poData, vendorData] = await loadData();
+        if (!cancelled) {
+          setPurchaseOrders(poData || []);
+          setVendors(vendorData || []);
+          setError("");
+        }
+      } catch (err) {
+        console.error(err);
+        if (!cancelled) {
+          setError("Failed to fetch purchase orders or vendors");
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    loadData();
+    return () => {
+      cancelled = true;
+    };
   }, []);
+
+  const retryFetchData = () => {
+    setLoading(true);
+    setError("");
+    fetchData();
+  };
 
   const columns = [
     {
@@ -193,28 +221,24 @@ export const AdminPurchaseOrders = () => {
   ];
 
   // Vendor lookup — keyed by normalized ID, value is businessName (per spec, never firstName/lastName)
-  const vendorMap = useMemo(() => {
-    return vendors.reduce((acc, v) => {
-      const key = String(v.id ?? v._id);
-      acc[key] = v.businessName || "N/A";
-      return acc;
-    }, {});
-  }, [vendors]);
+  const vendorMap = vendors.reduce((acc, vendor) => {
+    const key = String(vendor.id ?? vendor._id);
+    acc[key] = vendor.businessName || "N/A";
+    return acc;
+  }, {});
 
-  const filteredOrders = useMemo(() => {
-    return purchaseOrders.filter((po) => {
-      const matchesFilter =
-        filter === "all" || po.status?.toLowerCase() === filter.toLowerCase();
+  const filteredOrders = purchaseOrders.filter((po) => {
+    const matchesFilter =
+      filter === "all" || po.status?.toLowerCase() === filter.toLowerCase();
 
-      const vendorName = vendorMap[String(po.vendorId)] || "";
-      const matchesSearch =
-        !search ||
-        po.poNumber?.toLowerCase().includes(search.toLowerCase()) ||
-        vendorName.toLowerCase().includes(search.toLowerCase());
+    const vendorName = vendorMap[String(po.vendorId)] || "";
+    const matchesSearch =
+      !search ||
+      po.poNumber?.toLowerCase().includes(search.toLowerCase()) ||
+      vendorName.toLowerCase().includes(search.toLowerCase());
 
-      return matchesFilter && matchesSearch;
-    });
-  }, [purchaseOrders, filter, search, vendorMap]);
+    return matchesFilter && matchesSearch;
+  });
 
   const handleDelete = async () => {
     try {
@@ -346,17 +370,31 @@ export const AdminPurchaseOrders = () => {
 
       {/* Scrollable Table Section */}
       {loading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", py: 5 }}>
-          <CircularProgress />
-        </Box>
+        <LoadingState message="Loading purchase orders...." />
       ) : error ? (
-        <Typography color="error" sx={{ mt: 3 }}>
-          {error}
-        </Typography>
+        // <Typography color="error" sx={{ mt: 3 }}>
+        //   {error}
+        // </Typography>
+        <ErrorState message={error} onRetry={retryFetchData} />
       ) : filteredOrders.length === 0 ? (
-        <Typography color="text.secondary" sx={{ mt: 3 }}>
-          No purchase orders found.
-        </Typography>
+        purchaseOrders.length === 0 ? (
+          <EmptyState
+            title="No purchase orders yet"
+            description="Create a purchase order to get started."
+            actionLabel="Create PO"
+            onAction={() => navigate("/admin/purchase-orders/create")}
+          />
+        ) : (
+          <EmptyState
+            title="No purchase orders match your search or filters"
+            description="Try changing or clearing your search and filters."
+            actionLabel="Clear filters"
+            onAction={() => {
+              setSearch("");
+              setFilter("all");
+            }}
+          />
+        )
       ) : (
         <DataTable columns={columns} rows={filteredOrders} />
       )}

@@ -35,7 +35,7 @@ const ITEM_GRID = "2.2fr 0.8fr 1fr 1fr 40px";
 export const AdminCreatePO = () => {
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [purchaseOrders, setPurchaseOrders] = useState([]);
@@ -53,26 +53,33 @@ export const AdminCreatePO = () => {
 
   const [items, setItems] = useState([{ name: "", qty: "", unitPrice: "" }]);
 
-  const fetchData = async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const [poData, vendorData] = await Promise.all([
-        getAllPurchaseOrders(),
-        getVendors(),
-      ]);
-      setPurchaseOrders(poData || []);
-      setVendors(vendorData || []);
-    } catch (err) {
-      console.error(err);
-      setError("Failed to fetch purchase orders or vendors");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchData();
+    let cancelled = false;
+    const loadData = async () => {
+      try {
+        const [poData, vendorData] = await Promise.all([
+          getAllPurchaseOrders(),
+          getVendors(),
+        ]);
+        if (!cancelled) {
+          setPurchaseOrders(poData || []);
+          setVendors(vendorData || []);
+          setError("");
+        }
+      } catch (err) {
+        console.error(err);
+        if (!cancelled) {
+          setError("Failed to fetch purchase orders or vendors");
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    loadData();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // Only active vendors can receive new POs

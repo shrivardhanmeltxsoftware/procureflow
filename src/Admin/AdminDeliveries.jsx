@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import {
   getAllPurchaseOrders,
   getVendors,
@@ -11,7 +11,6 @@ import {
   Divider,
   Button,
   Chip,
-  CircularProgress,
   Select,
   MenuItem,
   TextField,
@@ -32,6 +31,9 @@ import {
   DELIVERY_STATUS_COLOR,
   getStatusColor,
 } from "../constants/statusColors";
+import { LoadingState } from "../components/common/LoadingState";
+import { ErrorState } from "../components/common/ErrorState";
+import EmptyState from "../components/common/EmptyState";
 
 const DELIVERY_OPTIONS = ["pending", "shipped", "delivered", "delayed"];
 
@@ -40,7 +42,7 @@ const today = new Date().toISOString().split("T")[0];
 export const AdminDeliveries = () => {
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [purchaseOrders, setPurchaseOrders] = useState([]);
   const [vendors, setVendors] = useState([]);
@@ -53,14 +55,13 @@ export const AdminDeliveries = () => {
   const [saving, setSaving] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "" });
 
+  const loadData = () =>
+    Promise.all([getAllPurchaseOrders(), getVendors()]);
+
   const fetchData = async () => {
-    setLoading(true);
-    setError("");
     try {
-      const [poData, vendorData] = await Promise.all([
-        getAllPurchaseOrders(),
-        getVendors(),
-      ]);
+      const [poData, vendorData] = await loadData();
+      setError("");
       setPurchaseOrders(poData || []);
       setVendors(vendorData || []);
     } catch (err) {
@@ -72,8 +73,34 @@ export const AdminDeliveries = () => {
   };
 
   useEffect(() => {
-    fetchData();
+    let cancelled = false;
+    const loadData = async () => {
+      try {
+        const [poData, vendorData] = await loadData();
+        if (!cancelled) {
+          setPurchaseOrders(poData || []);
+          setVendors(vendorData || []);
+          setError("");
+        }
+      } catch (err) {
+        console.error(err);
+        if (!cancelled) setError("Failed to fetch deliveries");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    loadData();
+    return () => {
+      cancelled = true;
+    };
   }, []);
+
+  const retryFetchData = () => {
+    setLoading(true);
+    setError("");
+    fetchData();
+  };
 
   const columns = [
     {
@@ -135,32 +162,31 @@ export const AdminDeliveries = () => {
     },
   ];
 
-  const vendorMap = useMemo(() => {
-    return vendors.reduce((acc, v) => {
-      acc[String(v.id ?? v._id)] = v.businessName || "N/A";
-      return acc;
-    }, {});
-  }, [vendors]);
+  const vendorMap = vendors.reduce((acc, vendor) => {
+    acc[String(vendor.id ?? vendor._id)] = vendor.businessName || "N/A";
+    return acc;
+  }, {});
 
   // Deliveries = POs the vendor has accepted (or that are already completed)
-  const filteredDeliveries = useMemo(() => {
-    return purchaseOrders
-      .filter((po) =>
-        ["accepted", "completed"].includes(po.status?.toLowerCase()),
-      )
-      .filter((po) => {
-        const matchesFilter =
-          filter === "all" || po.deliveryStatus?.toLowerCase() === filter;
+  const hasAcceptedPurchaseOrders = purchaseOrders.some((po) =>
+    ["accepted", "completed"].includes(po.status?.toLowerCase()),
+  );
+  const filteredDeliveries = purchaseOrders
+    .filter((po) =>
+      ["accepted", "completed"].includes(po.status?.toLowerCase()),
+    )
+    .filter((po) => {
+      const matchesFilter =
+        filter === "all" || po.deliveryStatus?.toLowerCase() === filter;
 
-        const vendorName = vendorMap[String(po.vendorId)] || "";
-        const matchesSearch =
-          !search ||
-          po.poNumber?.toLowerCase().includes(search.toLowerCase()) ||
-          vendorName.toLowerCase().includes(search.toLowerCase());
+      const vendorName = vendorMap[String(po.vendorId)] || "";
+      const matchesSearch =
+        !search ||
+        po.poNumber?.toLowerCase().includes(search.toLowerCase()) ||
+        vendorName.toLowerCase().includes(search.toLowerCase());
 
-        return matchesFilter && matchesSearch;
-      });
-  }, [purchaseOrders, filter, search, vendorMap]);
+      return matchesFilter && matchesSearch;
+    });
 
   const openDialog = (po) => {
     setSelectedPo(po);
@@ -312,17 +338,26 @@ export const AdminDeliveries = () => {
 
       {/* Scrollable table */}
       {loading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", py: 5 }}>
-          <CircularProgress />
-        </Box>
+        <LoadingState message="Loading deliveries..." />
       ) : error ? (
-        <Typography color="error" sx={{ mt: 3 }}>
-          {error}
-        </Typography>
+        <ErrorState message={error} onRetry={retryFetchData} />
       ) : filteredDeliveries.length === 0 ? (
-        <Typography color="text.secondary" sx={{ mt: 3 }}>
-          No deliveries found. Accepted purchase orders will appear here.
-        </Typography>
+        !hasAcceptedPurchaseOrders ? (
+          <EmptyState
+            title="No deliveries yet"
+            description="Deliveries will appear here for accepted purchase orders."
+          />
+        ) : (
+          <EmptyState
+            title="No deliveries match your search or filter"
+            description="Try changing or clearing your search and filter."
+            actionLabel="Clear filters"
+            onAction={() => {
+              setSearch("");
+              setFilter("all");
+            }}
+          />
+        )
       ) : (
         <DataTable columns={columns} rows={filteredDeliveries} />
       )}

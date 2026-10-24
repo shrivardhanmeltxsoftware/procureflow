@@ -4,7 +4,6 @@ import {
   Divider,
   Button,
   Chip,
-  CircularProgress,
   DialogContent,
   DialogActions,
   Dialog,
@@ -15,8 +14,9 @@ import {
   Select,
   MenuItem,
   TextField,
+  Alert,
 } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { Navigate } from "react-router";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
@@ -29,6 +29,9 @@ import {
   getStatusColor,
   INVOICE_STATUS_COLOR,
 } from "../constants/statusColors";
+import { LoadingState } from "../components/common/LoadingState";
+import { ErrorState } from "../components/common/ErrorState";
+import EmptyState from "../components/common/EmptyState";
 
 const toBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -46,30 +49,85 @@ export const Invoices = () => {
   const [amount, setAmount] = useState("");
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const [loadError, setLoadError] = useState("");
+  const [purchaseOrdersError, setPurchaseOrdersError] = useState("");
 
   const [invoices, setInvoices] = useState([]);
   const [purchaseOrders, setPurchaseOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const vendor = JSON.parse(localStorage.getItem("vendor"));
 
-  const fetchInvoices = async () => {
+  const loadInvoices = useCallback(() => getInvoices(vendor.id), [vendor?.id]);
+  const loadPurchaseOrders = useCallback(
+    () => getPurchaseOrders(vendor.id),
+    [vendor?.id],
+  );
+
+  useEffect(() => {
     if (!vendor?.id) return;
 
+    let cancelled = false;
+    const loadInvoiceData = async () => {
+      try {
+        const data = await loadInvoices();
+        if (!cancelled) {
+          setInvoices(data);
+          setLoadError("");
+        }
+      } catch (err) {
+        console.error(err);
+        if (!cancelled) {
+          setLoadError("Failed to load invoices. Please try again.");
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+    const loadPurchaseOrderData = async () => {
+      try {
+        const data = await loadPurchaseOrders();
+        if (!cancelled) {
+          setPurchaseOrders(
+            data.filter(
+              (po) => po.status === "accepted" || po.status === "completed",
+            ),
+          );
+          setPurchaseOrdersError("");
+        }
+      } catch (err) {
+        console.error(err);
+        if (!cancelled) {
+          setPurchaseOrdersError(
+            "Failed to load purchase orders. Please try again.",
+          );
+        }
+      }
+    };
+
+    loadInvoiceData();
+    loadPurchaseOrderData();
+    return () => {
+      cancelled = true;
+    };
+  }, [loadInvoices, loadPurchaseOrders, vendor?.id]);
+
+  const retryFetchInvoices = async () => {
+    setLoading(true);
+    setLoadError("");
     try {
-      const data = await getInvoices(vendor.id);
-      setInvoices(data);
+      setInvoices(await loadInvoices());
     } catch (err) {
       console.error(err);
+      setLoadError("Failed to load invoices. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchPOs = async () => {
-    if (!vendor?.id) return;
-
+  const retryFetchPOs = async () => {
+    setPurchaseOrdersError("");
     try {
-      const data = await getPurchaseOrders(vendor.id);
+      const data = await loadPurchaseOrders();
       setPurchaseOrders(
         data.filter(
           (po) => po.status === "accepted" || po.status === "completed",
@@ -77,13 +135,11 @@ export const Invoices = () => {
       );
     } catch (err) {
       console.error(err);
+      setPurchaseOrdersError(
+        "Failed to load purchase orders. Please try again.",
+      );
     }
   };
-
-  useEffect(() => {
-    fetchInvoices();
-    fetchPOs();
-  }, []);
 
   if (!vendor?.id) {
     return <Navigate to="/" replace />;
@@ -193,7 +249,7 @@ export const Invoices = () => {
       });
 
       handleUploadClose();
-      fetchInvoices();
+      retryFetchInvoices();
     } catch (uploadError) {
       setError(uploadError.message || "Unable to upload invoice.");
     } finally {
@@ -227,13 +283,16 @@ export const Invoices = () => {
       <Divider sx={{ mt: 2 }} />
 
       {loading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", py: 5 }}>
-          <CircularProgress />
-        </Box>
+        <LoadingState message="Loading invoices..." />
+      ) : loadError ? (
+        <ErrorState message={loadError} onRetry={retryFetchInvoices} />
       ) : invoices.length === 0 ? (
-        <Typography color="text.secondary" sx={{ mt: 2 }}>
-          No invoices uploaded yet.
-        </Typography>
+        <EmptyState
+          title="No invoices yet"
+          description="Invoices you upload will appear here."
+          actionLabel="Upload invoice"
+          onAction={() => setUploadOpen(true)}
+        />
       ) : (
         <DataTable
           columns={columns}
@@ -289,6 +348,9 @@ export const Invoices = () => {
               ))}
             </Select>
           </FormControl>
+          {purchaseOrdersError && (
+            <ErrorState message={purchaseOrdersError} onRetry={retryFetchPOs} />
+          )}
 
           <Typography
             sx={{
@@ -391,11 +453,7 @@ export const Invoices = () => {
             />
           </Box>
 
-          {error && (
-            <Typography color="error" sx={{ mt: 1, fontSize: 14 }}>
-              {error}
-            </Typography>
-          )}
+          {error && <Alert severity="error">{error}</Alert>}
         </DialogContent>
 
         <DialogActions sx={{ px: 3, pb: 2, gap: 1 }}>

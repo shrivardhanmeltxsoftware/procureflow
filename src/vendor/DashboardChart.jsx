@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
-import { Box, Paper, Typography, Grid, CircularProgress } from "@mui/material";
+import { useCallback, useEffect, useState } from "react";
+import { Box, Paper, Typography, Grid } from "@mui/material";
 import ReactECharts from "echarts-for-react";
 import { getPurchaseOrders, getInvoices } from "../services/api";
+import { LoadingState } from "../components/common/LoadingState";
+import { ErrorState } from "../components/common/ErrorState";
 
 const STATUS_COLORS = {
   Pending: "#ED6C02",
@@ -17,40 +19,72 @@ const PAYMENT_COLORS = {
 };
 
 export const DashboardChart = () => {
+  const vendor = JSON.parse(localStorage.getItem("vendor"));
   const [purchaseOrders, setPurchaseOrders] = useState([]);
   const [invoices, setInvoices] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() =>
+    Boolean(vendor?.id),
+  );
+  const [error, setError] = useState("");
+
+  const loadDashboardData = useCallback(
+    () =>
+      Promise.all([
+        getPurchaseOrders(vendor.id),
+        getInvoices(vendor.id),
+      ]),
+    [vendor?.id],
+  );
 
   useEffect(() => {
-    const fetchAll = async () => {
-      try {
-        const vendor = JSON.parse(localStorage.getItem("vendor"));
-        if (!vendor?.id) {
-          setLoading(false);
-          return;
-        }
+    if (!vendor?.id) return;
 
-        const [poData, invData] = await Promise.all([
-          getPurchaseOrders(vendor.id),
-          getInvoices(vendor.id),
-        ]);
-        setPurchaseOrders(poData);
-        setInvoices(invData);
-      } catch (err) {
-        console.error(err);
+    let cancelled = false;
+    const load = async () => {
+      try {
+        const [poData, invoiceData] = await loadDashboardData();
+        if (!cancelled) {
+          setPurchaseOrders(poData);
+          setInvoices(invoiceData);
+          setError("");
+        }
+      } catch (error) {
+        console.error(error);
+        if (!cancelled) {
+          setError("Failed to load dashboard charts. Please try again.");
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
-    fetchAll();
-  }, []);
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [loadDashboardData, vendor?.id]);
+
+  const retryFetchAll = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const [poData, invoiceData] = await loadDashboardData();
+      setPurchaseOrders(poData);
+      setInvoices(invoiceData);
+    } catch (error) {
+      console.error(error);
+      setError("Failed to load dashboard charts. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading) {
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", py: 5 }}>
-        <CircularProgress />
-      </Box>
-    );
+    return <LoadingState message="Loading dashboard charts..." />;
+  }
+
+  if (error) {
+    return <ErrorState message={error} onRetry={retryFetchAll} />;
   }
 
   const statusCounts = purchaseOrders.reduce((acc, po) => {

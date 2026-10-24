@@ -8,10 +8,8 @@ import {
   TableHead,
   TableRow,
   TableContainer,
-  Paper,
   Button,
   Chip,
-  CircularProgress,
   DialogContent,
   DialogActions,
   Dialog,
@@ -20,41 +18,70 @@ import {
   Tooltip,
   IconButton,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Navigate } from "react-router";
 import { getPurchaseOrders, updatePOStatus } from "../services/api";
 import { formatDate } from "../utils/dateUtils";
 import { DataTable } from "../components/DataTable";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import {
-  getStatusColor,
-  PO_STATUS_COLOR,
-} from "../constants/statusColors";
+import { getStatusColor, PO_STATUS_COLOR } from "../constants/statusColors";
+import { LoadingState } from "../components/common/LoadingState";
+import { ErrorState } from "../components/common/ErrorState";
+import EmptyState from "../components/common/EmptyState";
 
 export const PurchaseOrders = () => {
   const [purchaseOrders, setPurchaseOrders] = useState([]);
   const [selectedPurchaseOrder, setSelectedPurchaseOrder] = useState(null);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [updating, setUpdating] = useState(false);
   const vendor = JSON.parse(localStorage.getItem("vendor"));
 
-  const fetchPurchaseOrders = async () => {
+  const loadPurchaseOrders = useCallback(
+    () => getPurchaseOrders(vendor.id),
+    [vendor?.id],
+  );
+
+  useEffect(() => {
     if (!vendor?.id) return;
 
+    let cancelled = false;
+    const loadOrders = async () => {
+      try {
+        const data = await loadPurchaseOrders();
+        if (!cancelled) {
+          setPurchaseOrders(data);
+          setError("");
+        }
+      } catch (error) {
+        console.error(error);
+        if (!cancelled) {
+          setError("Failed to load purchase orders. Please try again.");
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    loadOrders();
+    return () => {
+      cancelled = true;
+    };
+  }, [loadPurchaseOrders, vendor?.id]);
+
+  const retryFetchPurchaseOrders = async () => {
+    setLoading(true);
+    setError("");
     try {
-      const data = await getPurchaseOrders(vendor.id);
-      setPurchaseOrders(data);
+      setPurchaseOrders(await loadPurchaseOrders());
     } catch (error) {
       console.error(error);
+      setError("Failed to load purchase orders. Please try again.");
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchPurchaseOrders();
-  }, []);
 
   const columns = [
     {
@@ -133,7 +160,8 @@ export const PurchaseOrders = () => {
     try {
       setUpdating(true);
       await updatePOStatus(selectedPurchaseOrder.id, status);
-      await fetchPurchaseOrders();
+      setPurchaseOrders(await loadPurchaseOrders());
+      setError("");
       handleClose();
     } catch (error) {
       console.error(error);
@@ -152,13 +180,14 @@ export const PurchaseOrders = () => {
       <Divider sx={{ mt: 2 }} />
 
       {loading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", py: 5 }}>
-          <CircularProgress />
-        </Box>
+        <LoadingState message="Loading purchase orders..." />
+      ) : error ? (
+        <ErrorState message={error} onRetry={retryFetchPurchaseOrders} />
       ) : purchaseOrders.length === 0 ? (
-        <Typography color="text.secondary" sx={{ mt: 3 }}>
-          No PO's uploaded yet.
-        </Typography>
+        <EmptyState
+          title="No purchase orders yet"
+          description="Purchase orders assigned to you will appear here."
+        />
       ) : (
         <DataTable
           columns={columns}
@@ -204,7 +233,9 @@ export const PurchaseOrders = () => {
               size="medium"
             />
           </Box>
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: { xs: 1, sm: 3 } }}>
+          <Box
+            sx={{ display: "flex", flexWrap: "wrap", gap: { xs: 1, sm: 3 } }}
+          >
             <Typography
               variant="subtitle1"
               sx={{ color: "#616161", flexGrow: 1 }}

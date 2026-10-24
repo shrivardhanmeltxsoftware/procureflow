@@ -6,7 +6,6 @@ import {
   TextField,
   Button,
   Chip,
-  CircularProgress,
   Alert,
   Divider,
   Select,
@@ -29,20 +28,24 @@ import {
   getStatusColor,
   INVOICE_STATUS_COLOR,
 } from "../constants/statusColors";
+import { LoadingState } from "../components/common/LoadingState";
+import { ErrorState } from "../components/common/ErrorState";
+import EmptyState from "../components/common/EmptyState";
 
 export const AdminInvoices = () => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [invoices, setInvoices] = useState([]);
   const [selectedMetadata, setSelectedMetadata] = useState(null);
 
+  const loadInvoices = () => getAllInvoices();
+
   const fetchInvoices = async () => {
-    setLoading(true);
-    setError("");
     try {
-      const data = await getAllInvoices();
+      const data = await loadInvoices();
+      setError("");
       setInvoices(data || []);
     } catch (err) {
       console.error(err);
@@ -53,8 +56,33 @@ export const AdminInvoices = () => {
   };
 
   useEffect(() => {
-    fetchInvoices();
+    let cancelled = false;
+    const loadInvoices = async () => {
+      try {
+        const data = await loadInvoices();
+        if (!cancelled) {
+          setInvoices(data || []);
+          setError("");
+        }
+      } catch (err) {
+        console.error(err);
+        if (!cancelled) setError("Failed to fetch invoices");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    loadInvoices();
+    return () => {
+      cancelled = true;
+    };
   }, []);
+
+  const retryFetchInvoices = () => {
+    setLoading(true);
+    setError("");
+    fetchInvoices();
+  };
 
   const columns = [
     {
@@ -274,17 +302,26 @@ export const AdminInvoices = () => {
       </Box>
 
       {loading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", py: 5 }}>
-          <CircularProgress />
-        </Box>
+        <LoadingState message="Loading invoices..." />
       ) : error ? (
-        <Typography color="error" sx={{ mt: 3 }}>
-          {error}
-        </Typography>
+        <ErrorState message={error} onRetry={retryFetchInvoices} />
       ) : filteredInvoices.length === 0 ? (
-        <Typography color="text.secondary" sx={{ mt: 3 }}>
-          No invoices found.
-        </Typography>
+        invoices.length === 0 ? (
+          <EmptyState
+            title="No invoices yet"
+            description="Vendor-submitted invoices will appear here."
+          />
+        ) : (
+          <EmptyState
+            title="No invoices match your search or filter"
+            description="Try changing or clearing your search and filter."
+            actionLabel="Clear filters"
+            onAction={() => {
+              setSearch("");
+              setFilter("all");
+            }}
+          />
+        )
       ) : (
         <DataTable columns={columns} rows={filteredInvoices} />
       )}

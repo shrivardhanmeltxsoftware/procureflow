@@ -5,7 +5,6 @@ import {
   Divider,
   Button,
   Chip,
-  CircularProgress,
   Select,
   MenuItem,
   TextField,
@@ -33,10 +32,10 @@ import {
   updateVendorStatus,
 } from "../services/AdminAPI";
 import { DataTable } from "../components/DataTable";
-import {
-  getStatusColor,
-  VENDOR_STATUS_COLOR,
-} from "../constants/statusColors";
+import { getStatusColor, VENDOR_STATUS_COLOR } from "../constants/statusColors";
+import { LoadingState } from "../components/common/LoadingState";
+import { ErrorState } from "../components/common/ErrorState";
+import EmptyState from "../components/common/EmptyState";
 
 export const AdminVendors = () => {
   const [filter, setFilter] = useState("all");
@@ -44,15 +43,16 @@ export const AdminVendors = () => {
   const [allVendors, setAllVendors] = useState([]);
   const [vendorToDelete, setVendorToDelete] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  const loadVendors = () => getVendors();
+
   const fetchAllVendors = async () => {
-    setLoading(true);
-    setError("");
     try {
-      const vendors = await getVendors();
+      const vendors = await loadVendors();
+      setError("");
       setAllVendors(vendors);
     } catch (err) {
       console.error(err);
@@ -169,8 +169,33 @@ export const AdminVendors = () => {
   });
 
   useEffect(() => {
-    fetchAllVendors();
+    let cancelled = false;
+    const loadVendors = async () => {
+      try {
+        const vendors = await loadVendors();
+        if (!cancelled) {
+          setAllVendors(vendors);
+          setError("");
+        }
+      } catch (err) {
+        console.error(err);
+        if (!cancelled) setError("Failed to fetch vendors");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    loadVendors();
+    return () => {
+      cancelled = true;
+    };
   }, []);
+
+  const retryFetchAllVendors = () => {
+    setLoading(true);
+    setError("");
+    fetchAllVendors();
+  };
 
   const handleConfirmDelete = async () => {
     try {
@@ -312,17 +337,28 @@ export const AdminVendors = () => {
 
       {/* Scrollable Table Section */}
       {loading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", py: 5 }}>
-          <CircularProgress />
-        </Box>
+        <LoadingState message="Loading vendors..." />
       ) : error ? (
-        <Typography color="error" sx={{ mt: 3 }}>
-          {error}
-        </Typography>
+        <ErrorState message={error} onRetry={retryFetchAllVendors} />
       ) : filteredVendors.length === 0 ? (
-        <Typography color="text.secondary" sx={{ mt: 3 }}>
-          No vendors found.
-        </Typography>
+        allVendors.length === 0 ? (
+          <EmptyState
+            title="No vendors yet"
+            description="Add a vendor to start managing vendor records."
+            actionLabel="Add vendor"
+            onAction={() => navigate("/admin/addVendor")}
+          />
+        ) : (
+          <EmptyState
+            title="No vendors match your search or filters"
+            description="Try changing or clearing your search and filters."
+            actionLabel="Clear filters"
+            onAction={() => {
+              setSearch("");
+              setFilter("all");
+            }}
+          />
+        )
       ) : (
         <DataTable columns={columns} rows={filteredVendors} />
       )}

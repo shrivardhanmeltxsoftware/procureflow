@@ -157,10 +157,16 @@ export const Profile = () => {
               </FormControl>
             </Grid>
           </Grid>
-
-          <Button type="submit" variant="contained" sx={{ mt: 3 }}>
-            Save Changes
-          </Button>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
+            <Button type="submit" variant="contained" sx={{ mt: 3 }}>
+              Save Changes
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Box>

@@ -38,6 +38,9 @@ import {
   getStatusColor,
   PAYMENT_STATUS_COLOR,
 } from "../constants/statusColors";
+import { LoadingState } from "../components/common/LoadingState";
+import { ErrorState } from "../components/common/ErrorState";
+import EmptyState from "../components/common/EmptyState";
 
 const formatCurrency = (amount) => {
   const numericAmount = Number(amount);
@@ -81,6 +84,11 @@ const SummaryCard = ({ title, value, icon, currency = false }) => (
     }}
   >
     <Stack direction="row" alignitems="flex-start" spacing={1.5}>
+      {icon && (
+        <Box sx={{ display: "flex", alignItems: "center", color: "primary.main" }}>
+          {icon}
+        </Box>
+      )}
       <Box sx={{ flex: 1, minWidth: 0 }}>
         <Typography color="text.secondary" variant="body1">
           {title}
@@ -126,31 +134,59 @@ export const AdminPayments = () => {
   const [paymentTarget, setPaymentTarget] = useState(null);
   const [updatingPayment, setUpdatingPayment] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
+  const loadPaymentData = () =>
+    Promise.all([getAllInvoices(), getVendors(), getAllPurchaseOrders()]);
+
+  const fetchData = async () => {
+    try {
+      const [invoiceData, vendorData, purchaseOrderData] =
+        await loadPaymentData();
+
+      setInvoices(invoiceData);
+      setVendors(vendorData);
+      setPurchaseOrders(purchaseOrderData);
       setError("");
+    } catch (fetchError) {
+      console.error("Failed to fetch payment data:", fetchError);
+      setError("Failed to load payment data. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
       try {
-        const [invoiceData, vendorData, purchaseOrderData] = await Promise.all([
-          getAllInvoices(),
-          getVendors(),
-          getAllPurchaseOrders(),
-        ]);
-
-        setInvoices(invoiceData);
-        setVendors(vendorData);
-        setPurchaseOrders(purchaseOrderData);
+        const [invoiceData, vendorData, purchaseOrderData] =
+          await loadPaymentData();
+        if (!cancelled) {
+          setInvoices(invoiceData);
+          setVendors(vendorData);
+          setPurchaseOrders(purchaseOrderData);
+          setError("");
+        }
       } catch (fetchError) {
         console.error("Failed to fetch payment data:", fetchError);
-        setError("Failed to load payment data. Please try again.");
+        if (!cancelled) {
+          setError("Failed to load payment data. Please try again.");
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
 
-    fetchData();
+    load();
+    return () => {
+      cancelled = true;
+    };
   }, []);
+
+  const retryFetchData = () => {
+    setLoading(true);
+    setError("");
+    fetchData();
+  };
 
   const columns = [
     {
@@ -292,27 +328,24 @@ export const AdminPayments = () => {
     };
   }, [approvedInvoices]);
 
-  const filteredInvoices = useMemo(() => {
-    const searchTerm = search.trim().toLowerCase();
+  const searchTerm = search.trim().toLowerCase();
+  const filteredInvoices = approvedInvoices.filter((invoice) => {
+    const paymentStatus = getPaymentStatus(invoice);
+    if (paymentFilter !== "all" && paymentStatus !== paymentFilter) {
+      return false;
+    }
 
-    return approvedInvoices.filter((invoice) => {
-      const paymentStatus = getPaymentStatus(invoice);
-      if (paymentFilter !== "all" && paymentStatus !== paymentFilter) {
-        return false;
-      }
-
-      const details = getInvoiceDetails(invoice);
-      return (
-        !searchTerm ||
-        [invoice.invoiceNumber, details.poNumber, details.vendorName].some(
-          (value) =>
-            String(value || "")
-              .toLowerCase()
-              .includes(searchTerm),
-        )
-      );
-    });
-  }, [approvedInvoices, getInvoiceDetails, paymentFilter, search]);
+    const details = getInvoiceDetails(invoice);
+    return (
+      !searchTerm ||
+      [invoice.invoiceNumber, details.poNumber, details.vendorName].some(
+        (value) =>
+          String(value || "")
+            .toLowerCase()
+            .includes(searchTerm),
+      )
+    );
+  });
 
   const handleMarkAsPaid = async () => {
     if (!paymentTarget) return;
@@ -443,19 +476,24 @@ export const AdminPayments = () => {
       </Stack>
 
       {loading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", py: 6 }}>
-          <CircularProgress />
-        </Box>
+        <LoadingState message="Loading payments..." />
       ) : error ? (
-        <Alert severity="error">{error}</Alert>
+        <ErrorState message={error} onRetry={retryFetchData} />
       ) : approvedInvoices.length === 0 ? (
-        <Typography color="text.secondary">
-          No approved invoices found.
-        </Typography>
+        <EmptyState
+          title="No approved invoices yet"
+          description="Invoices will appear here after approval."
+        />
       ) : filteredInvoices.length === 0 ? (
-        <Typography color="text.secondary">
-          No payments match your search or filter.
-        </Typography>
+        <EmptyState
+          title="No payments match your search or filter"
+          description="Try changing or clearing your search and filter."
+          actionLabel="Clear filters"
+          onAction={() => {
+            setSearch("");
+            setPaymentFilter("all");
+          }}
+        />
       ) : (
         <DataTable
           columns={columns}

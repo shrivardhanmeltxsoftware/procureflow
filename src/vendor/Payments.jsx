@@ -1,19 +1,6 @@
-import {
-  Box,
-  Typography,
-  Divider,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  TableContainer,
-  Paper,
-  CircularProgress,
-  Chip,
-} from "@mui/material";
+import { Box, Typography, Divider, Chip } from "@mui/material";
 import { getInvoices } from "../services/api";
-import { useState, useEffect } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { Navigate } from "react-router";
 import { formatDate } from "../utils/dateUtils";
 import { DataTable } from "../components/DataTable";
@@ -21,30 +8,64 @@ import {
   getStatusColor,
   PAYMENT_STATUS_COLOR,
 } from "../constants/statusColors";
+import { LoadingState } from "../components/common/LoadingState";
+import { ErrorState } from "../components/common/ErrorState";
+import EmptyState from "../components/common/EmptyState";
 
 export const Payments = () => {
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const vendor = JSON.parse(localStorage.getItem("vendor"));
 
-  const fetchPayments = async () => {
+  const loadPayments = useCallback(() => getInvoices(vendor.id), [vendor?.id]);
+
+  useEffect(() => {
     if (!vendor?.id) return;
 
+    let cancelled = false;
+    const load = async () => {
+      try {
+        const data = await loadPayments();
+        if (!cancelled) {
+          setInvoices(
+            data.filter(
+              (payment) => payment.status?.toLowerCase() === "approved",
+            ),
+          );
+          setError("");
+        }
+      } catch (error) {
+        console.error(error);
+        if (!cancelled) {
+          setError("Failed to load payments. Please try again.");
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [loadPayments, vendor?.id]);
+
+  const retryFetchPayments = async () => {
+    setLoading(true);
+    setError("");
     try {
-      const data = await getInvoices(vendor.id);
+      const data = await loadPayments();
       setInvoices(
         data.filter((payment) => payment.status?.toLowerCase() === "approved"),
       );
     } catch (error) {
       console.error(error);
+      setError("Failed to load payments. Please try again.");
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchPayments();
-  }, []);
 
   if (!vendor?.id) {
     return <Navigate to="/" replace />;
@@ -109,15 +130,16 @@ export const Payments = () => {
           Payments
         </Typography>
       </Box>
-      <Divider sx={{ mt: 2 }} />
+      <Divider sx={{ mt: 2, mb: 3 }} />
       {loading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", py: 5 }}>
-          <CircularProgress />
-        </Box>
+        <LoadingState message="Loading payments..." />
+      ) : error ? (
+        <ErrorState message={error} onRetry={retryFetchPayments} />
       ) : invoices.length === 0 ? (
-        <Typography color="text.secondary" sx={{ mt: 3 }}>
-          No payments are approved yet.
-        </Typography>
+        <EmptyState
+          title="No approved payments yet"
+          description="Payments will appear here once an invoice is approved."
+        />
       ) : (
         <DataTable columns={columns} rows={invoices} headerBg="#bbdefb" />
       )}

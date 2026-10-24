@@ -11,7 +11,7 @@ import {
 import { useState } from "react";
 import loginAdminImage from "../assets/admin-loginPage.png";
 import { loginAdmin } from "../services/AdminAPI";
-import { useNavigate, Link } from "react-router";
+import { useNavigate } from "react-router";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
@@ -45,7 +45,8 @@ export const AdminLogin = () => {
       }
 
       // Store admin info in localStorage
-      const { password: _pw, ...safeAdmin } = admin;
+      const safeAdmin = { ...admin };
+      delete safeAdmin.password;
       localStorage.setItem("admin", JSON.stringify(safeAdmin));
       localStorage.setItem("adminId", String(admin.id));
 
