@@ -3,14 +3,10 @@ import {
   Box,
   Stack,
   Typography,
-  TextField,
   Button,
   Chip,
   Alert,
   Divider,
-  Select,
-  MenuItem,
-  InputAdornment,
   Tooltip,
   Dialog,
   DialogTitle,
@@ -31,6 +27,7 @@ import {
 import { LoadingState } from "../components/common/LoadingState";
 import { ErrorState } from "../components/common/ErrorState";
 import EmptyState from "../components/common/EmptyState";
+import SearchFilterBar from "../components/common/SearchFilterBar";
 
 export const AdminInvoices = () => {
   const [search, setSearch] = useState("");
@@ -57,7 +54,7 @@ export const AdminInvoices = () => {
 
   useEffect(() => {
     let cancelled = false;
-    const loadInvoices = async () => {
+    const loadInitialInvoices = async () => {
       try {
         const data = await loadInvoices();
         if (!cancelled) {
@@ -72,7 +69,7 @@ export const AdminInvoices = () => {
       }
     };
 
-    loadInvoices();
+    loadInitialInvoices();
     return () => {
       cancelled = true;
     };
@@ -141,7 +138,8 @@ export const AdminInvoices = () => {
       align: "center",
       sticky: true,
       render: (invoice) => (
-        <Stack direction="row" spacing={1} justifyContent="center">
+        <Stack direction="row" spacing={1} justifycontent="center" alignItems='
+        ' >
           <Tooltip title="View">
             <IconButton
               aria-label={`View ${invoice.invoiceNumber || "invoice"}`}
@@ -255,46 +253,18 @@ export const AdminInvoices = () => {
               justifyContent: "flex-end",
             }}
           >
-            <TextField
-              placeholder="Search invoices"
-              variant="outlined"
-              size="small"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              sx={{ width: { xs: "100%", sm: 380 }, maxWidth: "100%" }}
-              slotProps={{
-                input: {
-                  startAdornment: (
-                    <InputAdornment position="start" sx={{ mr: 1 }}>
-                      <Select
-                        value={filter}
-                        onChange={(e) => setFilter(e.target.value)}
-                        variant="standard"
-                        disableUnderline
-                        sx={{
-                          fontSize: "0.875rem",
-                          color: "text.secondary",
-                          fontWeight: 500,
-                          "& .MuiSelect-select": {
-                            py: 0,
-                            pr: "20px !important",
-                          },
-                        }}
-                      >
-                        <MenuItem value="all">All</MenuItem>
-                        <MenuItem value="pending">Pending</MenuItem>
-                        <MenuItem value="approved">Approved</MenuItem>
-                        <MenuItem value="rejected">Rejected</MenuItem>
-                      </Select>
-                      <Divider
-                        orientation="vertical"
-                        flexItem
-                        sx={{ ml: 1, height: 20 }}
-                      />
-                    </InputAdornment>
-                  ),
-                },
-              }}
+            <SearchFilterBar
+              searchValue={search}
+              onSearchChange={setSearch}
+              searchPlaceholder="Search invoices"
+              status={filter}
+              onStatusChange={setFilter}
+              statusOptions={[
+                { label: "All", value: "all" },
+                { label: "Pending", value: "pending" },
+                { label: "Approved", value: "approved" },
+                { label: "Rejected", value: "rejected" },
+              ]}
             />
           </Box>
         </Box>
@@ -332,7 +302,7 @@ export const AdminInvoices = () => {
         onClose={() => setSelectedMetadata(null)}
         maxWidth="xs"
         fullWidth
-        PaperProps={{ sx: { borderRadius: 3, p: 1 } }}
+        slotProps={{ paper: { sx: { borderRadius: 3, p: 1 } } }}
       >
         <DialogTitle sx={{ fontWeight: "bold" }}>Invoice Metadata</DialogTitle>
         <DialogContent>

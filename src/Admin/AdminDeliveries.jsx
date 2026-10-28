@@ -11,10 +11,8 @@ import {
   Divider,
   Button,
   Chip,
-  Select,
   MenuItem,
   TextField,
-  InputAdornment,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -23,7 +21,6 @@ import {
   Snackbar,
 } from "@mui/material";
 
-import SearchIcon from "@mui/icons-material/Search";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { formatDate } from "../utils/dateUtils";
 import { DataTable } from "../components/DataTable";
@@ -34,6 +31,7 @@ import {
 import { LoadingState } from "../components/common/LoadingState";
 import { ErrorState } from "../components/common/ErrorState";
 import EmptyState from "../components/common/EmptyState";
+import SearchFilterBar from "../components/common/SearchFilterBar";
 
 const DELIVERY_OPTIONS = ["pending", "shipped", "delivered", "delayed"];
 
@@ -74,7 +72,7 @@ export const AdminDeliveries = () => {
 
   useEffect(() => {
     let cancelled = false;
-    const loadData = async () => {
+    const loadInitialData = async () => {
       try {
         const [poData, vendorData] = await loadData();
         if (!cancelled) {
@@ -90,7 +88,7 @@ export const AdminDeliveries = () => {
       }
     };
 
-    loadData();
+    loadInitialData();
     return () => {
       cancelled = true;
     };
@@ -285,52 +283,19 @@ export const AdminDeliveries = () => {
             </Typography>
           </Box>
 
-          <TextField
-            placeholder="Search PO number or vendor"
-            variant="outlined"
-            size="small"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            sx={{ width: { xs: "100%", sm: 380 }, maxWidth: "100%" }}
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <InputAdornment position="start" sx={{ mr: 1 }}>
-                    <Select
-                      value={filter}
-                      onChange={(e) => setFilter(e.target.value)}
-                      variant="standard"
-                      disableUnderline
-                      sx={{
-                        fontSize: "0.875rem",
-                        color: "text.secondary",
-                        fontWeight: 500,
-                        "& .MuiSelect-select": { py: 0, pr: "20px !important" },
-                      }}
-                    >
-                      <MenuItem value="all">All</MenuItem>
-                      <MenuItem value="pending">Pending</MenuItem>
-                      <MenuItem value="shipped">Shipped</MenuItem>
-                      <MenuItem value="delivered">Delivered</MenuItem>
-                      <MenuItem value="delayed">Delayed</MenuItem>
-                    </Select>
-                    <Divider
-                      orientation="vertical"
-                      flexItem
-                      sx={{ ml: 1, height: 20 }}
-                    />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <SearchIcon
-                      fontSize="small"
-                      sx={{ color: "text.secondary" }}
-                    />
-                  </InputAdornment>
-                ),
-              },
-            }}
+          <SearchFilterBar
+            searchValue={search}
+            onSearchChange={setSearch}
+            searchPlaceholder="Search PO number or vendor"
+            status={filter}
+            onStatusChange={setFilter}
+            statusOptions={[
+              { label: "All", value: "all" },
+              { label: "Pending", value: "pending" },
+              { label: "Shipped", value: "shipped" },
+              { label: "Delivered", value: "delivered" },
+              { label: "Delayed", value: "delayed" },
+            ]}
           />
         </Box>
         <Divider sx={{ my: 2 }} />

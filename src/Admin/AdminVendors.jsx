@@ -5,10 +5,6 @@ import {
   Divider,
   Button,
   Chip,
-  Select,
-  MenuItem,
-  TextField,
-  InputAdornment,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -36,6 +32,7 @@ import { getStatusColor, VENDOR_STATUS_COLOR } from "../constants/statusColors";
 import { LoadingState } from "../components/common/LoadingState";
 import { ErrorState } from "../components/common/ErrorState";
 import EmptyState from "../components/common/EmptyState";
+import SearchFilterBar from "../components/common/SearchFilterBar";
 
 export const AdminVendors = () => {
   const [filter, setFilter] = useState("all");
@@ -47,7 +44,13 @@ export const AdminVendors = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const loadVendors = () => getVendors();
+  const loadVendors = async () => {
+    const vendors = await getVendors();
+    if (!Array.isArray(vendors)) {
+      throw new Error("Unexpected vendors response");
+    }
+    return vendors;
+  };
 
   const fetchAllVendors = async () => {
     try {
@@ -170,7 +173,7 @@ export const AdminVendors = () => {
 
   useEffect(() => {
     let cancelled = false;
-    const loadVendors = async () => {
+    const loadInitialVendors = async () => {
       try {
         const vendors = await loadVendors();
         if (!cancelled) {
@@ -185,7 +188,7 @@ export const AdminVendors = () => {
       }
     };
 
-    loadVendors();
+    loadInitialVendors();
     return () => {
       cancelled = true;
     };
@@ -275,48 +278,19 @@ export const AdminVendors = () => {
               justifyContent: "flex-end",
             }}
           >
-            <TextField
-              placeholder="Search vendor"
-              variant="outlined"
-              size="small"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              sx={{ width: { xs: "100%", sm: 380 }, maxWidth: "100%" }}
-              slotProps={{
-                input: {
-                  startAdornment: (
-                    <InputAdornment position="start" sx={{ mr: 1 }}>
-                      <Select
-                        value={filter}
-                        onChange={(e) => setFilter(e.target.value)}
-                        variant="standard"
-                        disableUnderline
-                        sx={{
-                          fontSize: "0.875rem",
-                          color: "text.secondary",
-                          fontWeight: 500,
-                          "& .MuiSelect-select": {
-                            py: 0,
-                            pr: "20px !important",
-                          },
-                        }}
-                      >
-                        <MenuItem value="all">All</MenuItem>
-                        <MenuItem value="active">Active</MenuItem>
-                        <MenuItem value="pending">Pending</MenuItem>
-                        <MenuItem value="inactive">Inactive</MenuItem>
-                      </Select>
-                      <Divider
-                        orientation="vertical"
-                        flexItem
-                        sx={{ ml: 1, height: 20 }}
-                      />
-                    </InputAdornment>
-                  ),
-                },
-              }}
+            <SearchFilterBar
+              searchValue={search}
+              onSearchChange={setSearch}
+              searchPlaceholder="Search vendors"
+              status={filter}
+              onStatusChange={setFilter}
+              statusOptions={[
+                { label: "All", value: "all" },
+                { label: "Active", value: "active" },
+                { label: "Pending", value: "pending" },
+                { label: "Inactive", value: "inactive" },
+              ]}
             />
-
             <Button
               variant="contained"
               color="primary"

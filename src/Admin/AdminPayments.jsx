@@ -9,22 +9,15 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  FormControl,
   IconButton,
-  InputAdornment,
-  InputLabel,
-  MenuItem,
   Divider,
   Paper,
-  Select,
   Stack,
-  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import PaymentIcon from "@mui/icons-material/Payment";
-import SearchIcon from "@mui/icons-material/Search";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { formatDate } from "../utils/dateUtils";
 import {
@@ -41,6 +34,7 @@ import {
 import { LoadingState } from "../components/common/LoadingState";
 import { ErrorState } from "../components/common/ErrorState";
 import EmptyState from "../components/common/EmptyState";
+import SearchFilterBar from "../components/common/SearchFilterBar";
 
 const formatCurrency = (amount) => {
   const numericAmount = Number(amount);
@@ -83,7 +77,7 @@ const SummaryCard = ({ title, value, icon, currency = false }) => (
       borderRadius: 3,
     }}
   >
-    <Stack direction="row" alignitems="flex-start" spacing={1.5}>
+    <Stack direction="row" alignItems="flex-start" spacing={1.5}>
       {icon && (
         <Box sx={{ display: "flex", alignItems: "center", color: "primary.main" }}>
           {icon}
@@ -436,44 +430,20 @@ export const AdminPayments = () => {
         </Alert>
       )}
 
-      <Stack
-        direction={{ xs: "column", sm: "row" }}
-        spacing={2}
-        alignitems={{ xs: "stretch", sm: "center" }}
-      >
-        <TextField
-          fullWidth
-          size="small"
-          label="Search payments"
-          placeholder="Invoice, PO number, or vendor"
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon fontSize="small" />
-                </InputAdornment>
-              ),
-            },
-          }}
+      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <SearchFilterBar
+          searchValue={search}
+          onSearchChange={setSearch}
+          searchPlaceholder="Invoice, PO number, or vendor"
+          status={paymentFilter}
+          onStatusChange={setPaymentFilter}
+          statusOptions={[
+            { label: "All", value: "all" },
+            { label: "Pending", value: "pending" },
+            { label: "Paid", value: "paid" },
+          ]}
         />
-        <FormControl size="small" sx={{ minWidth: { xs: "100%", sm: 180 } }}>
-          <InputLabel id="payment-status-filter-label">
-            Payment status
-          </InputLabel>
-          <Select
-            labelId="payment-status-filter-label"
-            label="Payment status"
-            value={paymentFilter}
-            onChange={(event) => setPaymentFilter(event.target.value)}
-          >
-            <MenuItem value="all">All</MenuItem>
-            <MenuItem value="pending">Pending</MenuItem>
-            <MenuItem value="paid">Paid</MenuItem>
-          </Select>
-        </FormControl>
-      </Stack>
+      </Box>
 
       {loading ? (
         <LoadingState message="Loading payments..." />

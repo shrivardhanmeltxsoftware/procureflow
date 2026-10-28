@@ -165,7 +165,7 @@ const SummaryCard = ({ title, value, icon, tone }) => (
     }}
   >
     {/* Row 1: icon in front of the title */}
-    <Stack direction="row" alignitems="center" spacing={1}>
+    <Stack direction="row" alignItems="center" spacing={1}>
       <Box
         sx={{
           display: "flex",
