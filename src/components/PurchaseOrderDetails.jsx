@@ -1,5 +1,6 @@
 import {
   Box,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -8,24 +9,70 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 import { useId } from "react";
+import EventOutlinedIcon from "@mui/icons-material/EventOutlined";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
+import StickyNote2OutlinedIcon from "@mui/icons-material/StickyNote2Outlined";
 import { formatCurrency } from "../utils/currencyUtils";
 import { formatDate } from "../utils/dateUtils";
+
+const SectionCard = ({ id, title, icon, children }) => (
+  <Paper
+    elevation={2}
+    component="section"
+    aria-labelledby={id}
+    sx={(theme) => ({
+      overflow: "hidden",
+      borderRadius: 2,
+      minWidth: 0,
+      bgcolor: "background.paper",
+      "& > header": {
+        display: "flex",
+        alignItems: "center",
+        gap: 1,
+        px: { xs: 1.5, sm: 2 },
+        py: 1.25,
+        color: "primary.main",
+        bgcolor: alpha(theme.palette.primary.main, 0.08),
+        borderBottom: "1px solid",
+        borderColor: alpha(theme.palette.primary.main, 0.2),
+      },
+    })}
+  >
+    <Box component="header">
+      {icon}
+      <Typography
+        id={id}
+        variant="subtitle1"
+        component="h3"
+        sx={{ fontWeight: 600, color: "text.primary" }}
+      >
+        {title}
+      </Typography>
+    </Box>
+    <Box sx={{ p: { xs: 1.5, sm: 2 } }}>{children}</Box>
+  </Paper>
+);
 
 const InfoCard = ({ label, children }) => (
   <Box
     sx={{
-      p: 2,
-      border: 1,
-      borderColor: "divider",
-      borderRadius: 2,
+      p: 1.5,
+      borderRadius: 1.5,
+      bgcolor: "action.hover",
+      borderLeft: 3,
+      borderColor: "primary.main",
       minWidth: 0,
     }}
   >
     <Typography variant="caption" color="text.secondary">
       {label}
     </Typography>
-    <Typography variant="body1">{children}</Typography>
+    <Typography variant="body1" sx={{ fontWeight: 500 }}>
+      {children}
+    </Typography>
   </Box>
 );
 
@@ -45,19 +92,11 @@ export default function PurchaseOrderDetails({
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-      <Box
-        component="section"
-        aria-labelledby={datesHeadingId}
-        sx={{ minWidth: 0 }}
+      <SectionCard
+        id={datesHeadingId}
+        title="Dates"
+        icon={<EventOutlinedIcon sx={{ fontSize: 20 }} />}
       >
-        <Typography
-          id={datesHeadingId}
-          variant="h6"
-          component="h3"
-          sx={{ mb: 1.5 }}
-        >
-          Order dates
-        </Typography>
         <Box
           sx={{
             display: "grid",
@@ -80,21 +119,13 @@ export default function PurchaseOrderDetails({
             </InfoCard>
           )}
         </Box>
-      </Box>
+      </SectionCard>
 
-      <Box
-        component="section"
-        aria-labelledby={detailsHeadingId}
-        sx={{ minWidth: 0 }}
+      <SectionCard
+        id={detailsHeadingId}
+        title="Order details"
+        icon={<InfoOutlinedIcon sx={{ fontSize: 20 }} />}
       >
-        <Typography
-          id={detailsHeadingId}
-          variant="h6"
-          component="h3"
-          sx={{ mb: 1.5 }}
-        >
-          Order details
-        </Typography>
         <Box
           sx={{
             display: "grid",
@@ -110,21 +141,13 @@ export default function PurchaseOrderDetails({
             {po.deliveryAddress || "Not provided"}
           </InfoCard>
         </Box>
-      </Box>
+      </SectionCard>
 
-      <Box
-        component="section"
-        aria-labelledby={itemsHeadingId}
-        sx={{ minWidth: 0 }}
+      <SectionCard
+        id={itemsHeadingId}
+        title="Items"
+        icon={<Inventory2OutlinedIcon sx={{ fontSize: 20 }} />}
       >
-        <Typography
-          id={itemsHeadingId}
-          variant="h6"
-          component="h3"
-          sx={{ mb: 1.5 }}
-        >
-          Items
-        </Typography>
         <TableContainer
           role="region"
           aria-label="Purchase order items"
@@ -144,15 +167,21 @@ export default function PurchaseOrderDetails({
         >
           <Table size="small" sx={{ minWidth: 420 }}>
             <TableHead>
-              <TableRow>
-                <TableCell scope="col">Item</TableCell>
-                <TableCell scope="col" align="center">
+              <TableRow
+                sx={(theme) => ({
+                  bgcolor: alpha(theme.palette.primary.main, 0.08),
+                })}
+              >
+                <TableCell scope="col" sx={{ fontWeight: 600 }}>
+                  Item
+                </TableCell>
+                <TableCell scope="col" align="center" sx={{ fontWeight: 600 }}>
                   Qty
                 </TableCell>
-                <TableCell scope="col" align="right">
+                <TableCell scope="col" align="right" sx={{ fontWeight: 600 }}>
                   Unit price
                 </TableCell>
-                <TableCell scope="col" align="right">
+                <TableCell scope="col" align="right" sx={{ fontWeight: 600 }}>
                   Total
                 </TableCell>
               </TableRow>
@@ -162,6 +191,7 @@ export default function PurchaseOrderDetails({
                 items.map((item, index) => (
                   <TableRow
                     key={item?.id || `${item?.name || "item"}-${index}`}
+                    hover
                   >
                     <TableCell>{item?.name || "Unnamed item"}</TableCell>
                     <TableCell align="center">{item?.qty ?? "—"}</TableCell>
@@ -174,43 +204,46 @@ export default function PurchaseOrderDetails({
                   </TableRow>
                 ))
               ) : (
-                <TableRow>
+                <TableRow hover>
                   <TableCell colSpan={4} align="center">
                     No item details available.
                   </TableCell>
                 </TableRow>
               )}
-              <TableRow>
+              <TableRow
+                hover
+                sx={(theme) => ({
+                  bgcolor: alpha(theme.palette.primary.main, 0.08),
+                  "& th, & td": {
+                    fontWeight: 700,
+                    borderBottom: 0,
+                  },
+                })}
+              >
                 <TableCell
                   component="th"
                   scope="row"
                   colSpan={3}
-                  sx={{ fontWeight: 600 }}
                 >
                   Grand total
                 </TableCell>
-                <TableCell align="right" sx={{ fontWeight: 600 }}>
+                <TableCell
+                  align="right"
+                  sx={{ color: "primary.main", fontSize: "1rem" }}
+                >
                   {formatCurrency(po.amount)}
                 </TableCell>
               </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
-      </Box>
+      </SectionCard>
 
-      <Box
-        component="section"
-        aria-labelledby={notesHeadingId}
-        sx={{ minWidth: 0 }}
+      <SectionCard
+        id={notesHeadingId}
+        title="Notes"
+        icon={<StickyNote2OutlinedIcon sx={{ fontSize: 20 }} />}
       >
-        <Typography
-          id={notesHeadingId}
-          variant="h6"
-          component="h3"
-          sx={{ mb: 1 }}
-        >
-          Notes
-        </Typography>
         <Typography
           variant="body2"
           color="text.secondary"
@@ -218,7 +251,7 @@ export default function PurchaseOrderDetails({
         >
           {po.notes?.trim() || "No notes provided."}
         </Typography>
-      </Box>
+      </SectionCard>
     </Box>
   );
 }

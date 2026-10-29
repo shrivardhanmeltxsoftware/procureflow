@@ -86,6 +86,7 @@ export default function DetailsDrawer({
           overflowY: "auto",
           overflowX: "hidden",
           p: { xs: 2, sm: 3 },
+          bgcolor: "background.default",
           overflowWrap: "anywhere",
         }}
       >
