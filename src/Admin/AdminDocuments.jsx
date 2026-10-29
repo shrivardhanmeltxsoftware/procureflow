@@ -34,6 +34,7 @@ export const AdminDocuments = () => {
   const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [actionError, setActionError] = useState("");
   const [documents, setDocuments] = useState([]);
   const [selectedMetadata, setSelectedMetadata] = useState(null);
 
@@ -147,6 +148,7 @@ export const AdminDocuments = () => {
   };
 
   const handleStatusUpdate = async (docId, newStatus) => {
+    setActionError("");
     try {
       await updateDocumentStatus(docId, newStatus);
       setDocuments((prev) =>
@@ -154,6 +156,9 @@ export const AdminDocuments = () => {
       );
     } catch (err) {
       console.error("Error updating document status:", err);
+      setActionError(
+        `Could not ${newStatus === "approved" ? "approve" : "reject"} this document. Please try again.`,
+      );
     }
   };
 
@@ -234,6 +239,16 @@ export const AdminDocuments = () => {
         </Box>
         <Divider sx={{ mt: 2, mb: 3 }} />
       </Box>
+
+      {actionError && (
+        <Alert
+          severity="error"
+          sx={{ mb: 2 }}
+          onClose={() => setActionError("")}
+        >
+          {actionError}
+        </Alert>
+      )}
 
       {loading ? (
         <LoadingState message="Loading documents..." />

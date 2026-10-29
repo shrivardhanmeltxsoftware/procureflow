@@ -51,6 +51,7 @@ export const Invoices = () => {
   const [error, setError] = useState("");
   const [loadError, setLoadError] = useState("");
   const [purchaseOrdersError, setPurchaseOrdersError] = useState("");
+  const [purchaseOrdersLoading, setPurchaseOrdersLoading] = useState(true);
 
   const [invoices, setInvoices] = useState([]);
   const [purchaseOrders, setPurchaseOrders] = useState([]);
@@ -101,6 +102,8 @@ export const Invoices = () => {
             "Failed to load purchase orders. Please try again.",
           );
         }
+      } finally {
+        if (!cancelled) setPurchaseOrdersLoading(false);
       }
     };
 
@@ -125,6 +128,7 @@ export const Invoices = () => {
   };
 
   const retryFetchPOs = async () => {
+    setPurchaseOrdersLoading(true);
     setPurchaseOrdersError("");
     try {
       const data = await loadPurchaseOrders();
@@ -133,11 +137,14 @@ export const Invoices = () => {
           (po) => po.status === "accepted" || po.status === "completed",
         ),
       );
+      setPurchaseOrdersError("");
     } catch (err) {
       console.error(err);
       setPurchaseOrdersError(
         "Failed to load purchase orders. Please try again.",
       );
+    } finally {
+      setPurchaseOrdersLoading(false);
     }
   };
 
@@ -348,9 +355,14 @@ export const Invoices = () => {
               ))}
             </Select>
           </FormControl>
-          {purchaseOrdersError && (
-            <ErrorState message={purchaseOrdersError} onRetry={retryFetchPOs} />
-          )}
+          {purchaseOrdersLoading ? (
+            <LoadingState message="Loading purchase orders..." />
+          ) : purchaseOrdersError ? (
+            <ErrorState
+              message={purchaseOrdersError}
+              onRetry={retryFetchPOs}
+            />
+          ) : null}
 
           <Typography
             sx={{

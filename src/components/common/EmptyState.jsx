@@ -1,4 +1,6 @@
-import { Box, Button, Typography } from "@mui/material";
+
+import { Box, Button, Paper, Typography } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 import InboxOutlinedIcon from "@mui/icons-material/InboxOutlined";
 
 export default function EmptyState({
@@ -10,27 +12,84 @@ export default function EmptyState({
   return (
     <Box
       sx={{
+        minHeight: "60vh",
         width: "100%",
-        textAlign: "center",
-        py: { xs: 4, sm: 6 },
-        px: 2,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        p: { xs: 2, sm: 3 },
+        boxSizing: "border-box",
       }}
     >
-      <InboxOutlinedIcon
-        sx={{ fontSize: 44, color: "text.secondary", mb: 1 }}
-      />
+      <Paper
+        elevation={0}
+        sx={{
+          width: "100%",
+          maxWidth: 440,
+          p: { xs: 3, sm: 4 },
+          borderRadius: 3,
+          textAlign: "center",
+          border: "1px solid",
+          borderColor: "divider",
+          bgcolor: "background.paper",
+          boxShadow: 2,
+        }}
+      >
+        <Box
+          sx={{
+            width: 68,
+            height: 68,
+            mx: "auto",
+            mb: 2.5,
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.09),
+            color: "primary.main",
+          }}
+        >
+          <InboxOutlinedIcon sx={{ fontSize: 36 }} />
+        </Box>
 
-      <Typography variant="h6">{title}</Typography>
+        <Typography
+          variant="h6"
+          fontWeight={700}
+          color="text.primary"
+          gutterBottom
+        >
+          {title}
+        </Typography>
 
-      <Typography color="text.secondary" sx={{ mt: 1 }}>
-        {description}
-      </Typography>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ lineHeight: 1.7, overflowWrap: "anywhere" }}
+        >
+          {description}
+        </Typography>
 
-      {actionLabel && onAction && (
-        <Button onClick={onAction} sx={{ mt: 2 }}>
-          {actionLabel}
-        </Button>
-      )}
+        {actionLabel && onAction && (
+          <Button
+            variant="contained"
+            onClick={onAction}
+            sx={{
+              mt: 3,
+              px: 3,
+              py: 1,
+              borderRadius: 2,
+              textTransform: "none",
+              fontWeight: 600,
+              boxShadow: "none",
+              "&:hover": {
+                boxShadow: 2,
+              },
+            }}
+          >
+            {actionLabel}
+          </Button>
+        )}
+      </Paper>
     </Box>
   );
 }

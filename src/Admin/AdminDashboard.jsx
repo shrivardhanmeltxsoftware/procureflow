@@ -1,9 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  Alert,
   Box,
   Chip,
-  CircularProgress,
   IconButton,
   Paper,
   Stack,
@@ -31,6 +29,8 @@ import {
 import { formatDate } from "../utils/dateUtils";
 import { normalizeStatus } from "../constants/statusColors";
 import EmptyState from "../components/common/EmptyState";
+import { LoadingState } from "../components/common/LoadingState";
+import { ErrorState } from "../components/common/ErrorState";
 
 const STATUS_COLORS = {
   pending: "#ED6C02",
@@ -243,11 +243,45 @@ export const AdminDashboard = () => {
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const isMounted = useRef(false);
+  const isFetching = useRef(false);
+
+  const fetchDashboardData = useCallback(async () => {
+    if (isFetching.current) return;
+    isFetching.current = true;
+    try {
+      const [vendorData, purchaseOrderData, invoiceData] = await Promise.all([
+        getVendors(),
+        getAllPurchaseOrders(),
+        getAllInvoices(),
+      ]);
+
+      if (isMounted.current) {
+        setVendors(vendorData);
+        setPurchaseOrders(purchaseOrderData);
+        setInvoices(invoiceData);
+      }
+    } catch (fetchError) {
+      console.error("Failed to load admin dashboard data:", fetchError);
+      if (isMounted.current) {
+        setError("Dashboard data could not be loaded. Please try again.");
+      }
+    } finally {
+      if (isMounted.current) setLoading(false);
+      isFetching.current = false;
+    }
+  }, []);
+
+  const retryDashboardData = () => {
+    setLoading(true);
+    setError("");
+    fetchDashboardData();
+  };
 
   useEffect(() => {
-    let isMounted = true;
-
-    const fetchDashboardData = async () => {
+    isMounted.current = true;
+    let cancelled = false;
+    const loadInitialDashboardData = async () => {
       try {
         const [vendorData, purchaseOrderData, invoiceData] = await Promise.all([
           getVendors(),
@@ -255,24 +289,25 @@ export const AdminDashboard = () => {
           getAllInvoices(),
         ]);
 
-        if (isMounted) {
+        if (!cancelled) {
           setVendors(vendorData);
           setPurchaseOrders(purchaseOrderData);
           setInvoices(invoiceData);
         }
       } catch (fetchError) {
         console.error("Failed to load admin dashboard data:", fetchError);
-        if (isMounted) {
+        if (!cancelled) {
           setError("Dashboard data could not be loaded. Please try again.");
         }
       } finally {
-        if (isMounted) setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
 
-    fetchDashboardData();
+    loadInitialDashboardData();
     return () => {
-      isMounted = false;
+      cancelled = true;
+      isMounted.current = false;
     };
   }, []);
 
@@ -450,11 +485,9 @@ export const AdminDashboard = () => {
   return (
     <Box sx={{ width: "100%", minWidth: 0, pb: 2 }}>
       {loading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
-          <CircularProgress />
-        </Box>
+        <LoadingState message="Loading dashboard..." />
       ) : error ? (
-        <Alert severity="error">{error}</Alert>
+        <ErrorState message={error} onRetry={retryDashboardData} />
       ) : (
         <>
           <Box

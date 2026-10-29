@@ -399,30 +399,32 @@ export const AdminPayments = () => {
         <Divider sx={{ mt: 2, mb: 1 }} />
       </Box>
 
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: {
-            xs: "minmax(0, 1fr)",
-            sm: "repeat(2, minmax(0, 1fr))",
-            xl: "repeat(4, minmax(0, 1fr))",
-          },
-          gap: 2,
-        }}
-      >
-        <SummaryCard
-          title="Total Approved Invoices"
-          value={summary.approved}
-          icon={<AssignmentIcon />}
-        />
-        <SummaryCard title="Awaiting Payment" value={summary.pending} />
-        <SummaryCard title="Paid Invoices" value={summary.paid} />
-        <SummaryCard
-          title="Total Paid Amount"
-          value={summary.paidAmount}
-          currency
-        />
-      </Box>
+      {!loading && !error && (
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "minmax(0, 1fr)",
+              sm: "repeat(2, minmax(0, 1fr))",
+              xl: "repeat(4, minmax(0, 1fr))",
+            },
+            gap: 2,
+          }}
+        >
+          <SummaryCard
+            title="Total Approved Invoices"
+            value={summary.approved}
+            icon={<AssignmentIcon />}
+          />
+          <SummaryCard title="Awaiting Payment" value={summary.pending} />
+          <SummaryCard title="Paid Invoices" value={summary.paid} />
+          <SummaryCard
+            title="Total Paid Amount"
+            value={summary.paidAmount}
+            currency
+          />
+        </Box>
+      )}
 
       {updateError && !paymentTarget && (
         <Alert severity="error" onClose={() => setUpdateError("")}>

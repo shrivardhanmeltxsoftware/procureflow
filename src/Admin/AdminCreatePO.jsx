@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useCallback, useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router";
 import {
   getAllPurchaseOrders,
@@ -17,13 +17,14 @@ import {
   Chip,
   Divider,
   Alert,
-  CircularProgress,
   Tooltip,
   Snackbar,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { LoadingState } from "../components/common/LoadingState";
+import { ErrorState } from "../components/common/ErrorState";
 
 const today = new Date().toISOString().split("T")[0];
 
@@ -36,6 +37,7 @@ export const AdminCreatePO = () => {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [purchaseOrders, setPurchaseOrders] = useState([]);
@@ -53,9 +55,35 @@ export const AdminCreatePO = () => {
 
   const [items, setItems] = useState([{ name: "", qty: "", unitPrice: "" }]);
 
+  const loadData = useCallback(async (isCancelled = () => false) => {
+    try {
+      const [poData, vendorData] = await Promise.all([
+        getAllPurchaseOrders(),
+        getVendors(),
+      ]);
+      if (!isCancelled()) {
+        setPurchaseOrders(poData || []);
+        setVendors(vendorData || []);
+      }
+    } catch (err) {
+      console.error(err);
+      if (!isCancelled()) {
+        setLoadError("Failed to fetch purchase orders or vendors");
+      }
+    } finally {
+      if (!isCancelled()) setLoading(false);
+    }
+  }, []);
+
+  const retryLoadData = () => {
+    setLoading(true);
+    setLoadError("");
+    loadData();
+  };
+
   useEffect(() => {
     let cancelled = false;
-    const loadData = async () => {
+    const loadInitialData = async () => {
       try {
         const [poData, vendorData] = await Promise.all([
           getAllPurchaseOrders(),
@@ -64,19 +92,18 @@ export const AdminCreatePO = () => {
         if (!cancelled) {
           setPurchaseOrders(poData || []);
           setVendors(vendorData || []);
-          setError("");
         }
       } catch (err) {
         console.error(err);
         if (!cancelled) {
-          setError("Failed to fetch purchase orders or vendors");
+          setLoadError("Failed to fetch purchase orders or vendors");
         }
       } finally {
         if (!cancelled) setLoading(false);
       }
     };
 
-    loadData();
+    loadInitialData();
     return () => {
       cancelled = true;
     };
@@ -232,8 +259,17 @@ export const AdminCreatePO = () => {
       </Box>
 
       {loading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", py: 5 }}>
-          <CircularProgress />
+        <LoadingState message="Loading purchase orders and vendors..." />
+      ) : loadError ? (
+        <Box>
+          <ErrorState message={loadError} onRetry={retryLoadData} />
+          <Button
+            variant="outlined"
+            startIcon={<ArrowBackIcon />}
+            onClick={() => navigate("/admin/purchase-orders")}
+          >
+            Back to Purchase Orders
+          </Button>
         </Box>
       ) : (
         <>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router";
 import {
   Box,
@@ -9,7 +9,6 @@ import {
   TextField,
   Button,
   Chip,
-  CircularProgress,
   Alert,
   Snackbar,
   Divider,
@@ -38,6 +37,8 @@ import {
   getStatusColor,
   VENDOR_STATUS_COLOR,
 } from "../constants/statusColors";
+import { LoadingState } from "../components/common/LoadingState";
+import { ErrorState } from "../components/common/ErrorState";
 
 /**
  * Reusable read-only field display for View Mode
@@ -135,6 +136,7 @@ export const AdminVendorDetails = () => {
   });
 
   const [loading, setLoading] = useState(true);
+  const [loadedVendorId, setLoadedVendorId] = useState(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [saveError, setSaveError] = useState("");
@@ -145,7 +147,7 @@ export const AdminVendorDetails = () => {
   });
 
   // Populate form with vendor data
-  const populateFormData = (data) => {
+  const populateFormData = useCallback((data) => {
     setFormData({
       businessName: data.businessName || "",
       street: data.street || "",
@@ -168,15 +170,45 @@ export const AdminVendorDetails = () => {
       grossSales: data.grossSales || "",
       status: data.status || "pending",
     });
-  };
+  }, []);
 
   // Fetch vendor by ID
+  const fetchVendor = useCallback(async (isCancelled = () => false) => {
+    try {
+      const data = await getVendorById(id);
+      if (isCancelled()) return;
+      if (!data || Object.keys(data).length === 0) {
+        setVendor(null);
+      } else {
+        setVendor(data);
+        populateFormData(data);
+      }
+    } catch (err) {
+      console.error("Error fetching vendor details:", err);
+      if (!isCancelled()) {
+        setError("Failed to load vendor details. Please try again later.");
+      }
+    } finally {
+      if (!isCancelled()) {
+        setLoadedVendorId(id);
+        setLoading(false);
+      }
+    }
+  }, [id, populateFormData]);
+
+  const retryFetchVendor = () => {
+    setLoading(true);
+    setError("");
+    fetchVendor();
+  };
+
   useEffect(() => {
-    const fetchVendor = async () => {
-      setLoading(true);
-      setError("");
+    let cancelled = false;
+    const loadVendor = async () => {
+      if (!id) return;
       try {
         const data = await getVendorById(id);
+        if (cancelled) return;
         if (!data || Object.keys(data).length === 0) {
           setVendor(null);
         } else {
@@ -185,16 +217,22 @@ export const AdminVendorDetails = () => {
         }
       } catch (err) {
         console.error("Error fetching vendor details:", err);
-        setError("Failed to load vendor details. Please try again later.");
+        if (!cancelled) {
+          setError("Failed to load vendor details. Please try again later.");
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          setLoadedVendorId(id);
+          setLoading(false);
+        }
       }
     };
 
-    if (id) {
-      fetchVendor();
-    }
-  }, [id]);
+    loadVendor();
+    return () => {
+      cancelled = true;
+    };
+  }, [id, populateFormData]);
 
   // Handle form change
   const handleChange = (e) => {
@@ -277,33 +315,15 @@ export const AdminVendorDetails = () => {
   };
 
   // 1. Loading State
-  if (loading) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: "60vh",
-          gap: 2,
-        }}
-      >
-        <CircularProgress size={48} color="primary" />
-        <Typography variant="body1" color="text.secondary">
-          Loading vendor details...
-        </Typography>
-      </Box>
-    );
+  if (loading || loadedVendorId !== id) {
+    return <LoadingState message="Loading vendor details..." />;
   }
 
   // 2. Error State
   if (error) {
     return (
       <Box sx={{ maxWidth: 600, mx: "auto", mt: 6 }}>
-        <Alert severity="error" sx={{ mb: 3 }}>
-          {error}
-        </Alert>
+        <ErrorState message={error} onRetry={retryFetchVendor} />
         <Button
           variant="outlined"
           startIcon={<ArrowBackIcon />}

@@ -5,6 +5,7 @@ import {
   Divider,
   Button,
   Chip,
+  Alert,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -42,6 +43,7 @@ export const AdminVendors = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [actionError, setActionError] = useState("");
   const navigate = useNavigate();
 
   const loadVendors = async () => {
@@ -201,6 +203,7 @@ export const AdminVendors = () => {
   };
 
   const handleConfirmDelete = async () => {
+    setActionError("");
     try {
       await deleteVendor(vendorToDelete.id);
 
@@ -212,10 +215,12 @@ export const AdminVendors = () => {
       setVendorToDelete(null);
     } catch (error) {
       console.error("Failed to delete vendor:", error);
+      setActionError("Could not delete this vendor. Please try again.");
     }
   };
 
   const handleDeleteClick = (vendor) => {
+    setActionError("");
     setVendorToDelete(vendor);
     setDeleteDialogOpen(true);
   };
@@ -223,6 +228,7 @@ export const AdminVendors = () => {
   const handleToggleStatus = async (vendor) => {
     const newStatus = vendor.status === "active" ? "inactive" : "active";
 
+    setActionError("");
     try {
       await updateVendorStatus(vendor.id, newStatus);
 
@@ -233,6 +239,9 @@ export const AdminVendors = () => {
       );
     } catch (error) {
       console.error(error);
+      setActionError(
+        `Could not ${newStatus === "active" ? "activate" : "deactivate"} this vendor. Please try again.`,
+      );
     }
   };
 
@@ -309,6 +318,16 @@ export const AdminVendors = () => {
         <Divider sx={{ my: 2 }} />
       </Box>
 
+      {actionError && !deleteDialogOpen && (
+        <Alert
+          severity="error"
+          sx={{ mb: 2 }}
+          onClose={() => setActionError("")}
+        >
+          {actionError}
+        </Alert>
+      )}
+
       {/* Scrollable Table Section */}
       {loading ? (
         <LoadingState message="Loading vendors..." />
@@ -346,6 +365,15 @@ export const AdminVendors = () => {
           Are you sure you want to delete{" "}
           <strong>{vendorToDelete?.businessName}</strong>? This action cannot be
           undone.
+          {actionError && (
+            <Alert
+              severity="error"
+              sx={{ mt: 2 }}
+              onClose={() => setActionError("")}
+            >
+              {actionError}
+            </Alert>
+          )}
         </DialogContent>
 
         <DialogActions sx={{ p: 2 }}>

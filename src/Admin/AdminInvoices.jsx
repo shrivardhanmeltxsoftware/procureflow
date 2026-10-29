@@ -34,6 +34,7 @@ export const AdminInvoices = () => {
   const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [actionError, setActionError] = useState("");
   const [invoices, setInvoices] = useState([]);
   const [selectedMetadata, setSelectedMetadata] = useState(null);
 
@@ -176,6 +177,7 @@ export const AdminInvoices = () => {
   ];
 
   const handleStatusUpdate = async (id, newStatus) => {
+    setActionError("");
     try {
       const invoice = invoices.find((item) => item.id === id);
       const paymentFields =
@@ -192,6 +194,9 @@ export const AdminInvoices = () => {
       );
     } catch (err) {
       console.error("Error updating invoice status:", err);
+      setActionError(
+        `Could not ${newStatus === "approved" ? "approve" : "reject"} this invoice. Please try again.`,
+      );
     }
   };
 
@@ -270,6 +275,16 @@ export const AdminInvoices = () => {
         </Box>
         <Divider sx={{ mt: 2, mb: 3 }} />
       </Box>
+
+      {actionError && (
+        <Alert
+          severity="error"
+          sx={{ mb: 2 }}
+          onClose={() => setActionError("")}
+        >
+          {actionError}
+        </Alert>
+      )}
 
       {loading ? (
         <LoadingState message="Loading invoices..." />

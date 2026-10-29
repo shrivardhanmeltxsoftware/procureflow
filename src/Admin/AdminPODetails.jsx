@@ -17,7 +17,6 @@ import {
   Divider,
   Alert,
   Snackbar,
-  CircularProgress,
   Stack,
   Table,
   TableBody,
@@ -39,6 +38,8 @@ import {
   PO_STATUS_COLOR,
 } from "../constants/statusColors";
 import DetailsDrawer from "../components/common/DetailsDrawer";
+import { LoadingState } from "../components/common/LoadingState";
+import { ErrorState } from "../components/common/ErrorState";
 
 const ITEM_GRID = "2.2fr 0.8fr 1fr 1fr 40px";
 
@@ -381,11 +382,7 @@ export const AdminPODetails = ({
   ) : null;
 
   if (loading) {
-    const loadingContent = (
-      <Box sx={{ display: "flex", justifyContent: "center", py: 5 }}>
-        <CircularProgress />
-      </Box>
-    );
+    const loadingContent = <LoadingState message="Loading purchase order..." />;
     return embedded ? (
       <DetailsDrawer
         open={open}
@@ -405,16 +402,19 @@ export const AdminPODetails = ({
   if (loadError) {
     const errorContent = (
       <Box>
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {loadError}
-        </Alert>
+        <ErrorState
+          message={loadError}
+          onRetry={embedded ? undefined : retryLoad}
+        />
         {!embedded && (
-          <Button
-            variant="outlined"
-            onClick={() => navigate("/admin/purchase-orders")}
-          >
-            Back to Purchase Orders
-          </Button>
+          <Stack direction="row" spacing={1} justifyContent="center">
+            <Button
+              variant="outlined"
+              onClick={() => navigate("/admin/purchase-orders")}
+            >
+              Back to Purchase Orders
+            </Button>
+          </Stack>
         )}
       </Box>
     );
