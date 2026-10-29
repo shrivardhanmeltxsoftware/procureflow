@@ -18,6 +18,7 @@ import {
   Alert,
   Snackbar,
   CircularProgress,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -34,8 +35,10 @@ import { formatDate } from "../utils/dateUtils";
 import {
   DELIVERY_STATUS_COLOR,
   getStatusColor,
+  normalizeStatus,
   PO_STATUS_COLOR,
 } from "../constants/statusColors";
+import DetailsDrawer from "../components/common/DetailsDrawer";
 
 const ITEM_GRID = "2.2fr 0.8fr 1fr 1fr 40px";
 
@@ -71,10 +74,18 @@ const Field = ({ label, children }) => (
   </Box>
 );
 
-export const AdminPODetails = () => {
+export const AdminPODetails = ({
+  embedded = false,
+  open = true,
+  purchaseOrderId,
+  initialMode = "view",
+  onClose,
+} = {}) => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { id: routeId } = useParams();
+  const id = purchaseOrderId ?? routeId;
   const [searchParams, setSearchParams] = useSearchParams();
+  const [embeddedMode, setEmbeddedMode] = useState(initialMode);
 
   const [po, setPo] = useState(null);
   const [vendors, setVendors] = useState([]);
@@ -93,6 +104,7 @@ export const AdminPODetails = () => {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
+    let cancelled = false;
     const fetchData = async () => {
       setLoading(true);
       setLoadError("");
@@ -101,18 +113,24 @@ export const AdminPODetails = () => {
           getPurchaseOrderById(id),
           getVendors(),
         ]);
+        if (cancelled) return;
         setPo(poData);
         setVendors(vendorData || []);
         setForm(toEditForm(poData));
         setItems(toEditItems(poData.items));
       } catch (err) {
         console.error(err);
-        setLoadError("Purchase order not found or failed to load");
+        if (!cancelled) {
+          setLoadError("Purchase order not found or failed to load");
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
     fetchData();
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
   const vendorName = useMemo(() => {
@@ -122,8 +140,10 @@ export const AdminPODetails = () => {
   }, [po, vendors]);
 
   // Edit mode is allowed only while the vendor has not responded yet
-  const isPending = po?.status?.toLowerCase() === "pending";
-  const requestedEdit = searchParams.get("mode") === "edit";
+  const isPending = normalizeStatus(po?.status) === "pending";
+  const requestedEdit = embedded
+    ? embeddedMode === "edit"
+    : searchParams.get("mode") === "edit";
   const isEditMode = requestedEdit && isPending;
 
   const grandTotal = useMemo(
@@ -152,13 +172,23 @@ export const AdminPODetails = () => {
   const removeItem = (index) =>
     setItems((prev) => prev.filter((_, i) => i !== index));
 
-  const startEdit = () => setSearchParams({ mode: "edit" });
+  const startEdit = () => {
+    if (embedded) {
+      setEmbeddedMode("edit");
+    } else {
+      setSearchParams({ mode: "edit" });
+    }
+  };
 
   const cancelEdit = () => {
     setForm(toEditForm(po));
     setItems(toEditItems(po.items));
     setFormError("");
-    setSearchParams({ mode: "view" });
+    if (embedded) {
+      setEmbeddedMode("view");
+    } else {
+      setSearchParams({ mode: "view" });
+    }
   };
 
   const handleSave = async () => {
@@ -211,7 +241,11 @@ export const AdminPODetails = () => {
       setPo(updated);
       setForm(toEditForm(updated));
       setItems(toEditItems(updated.items));
-      setSearchParams({ mode: "view" });
+      if (embedded) {
+        setEmbeddedMode("view");
+      } else {
+        setSearchParams({ mode: "view" });
+      }
       setSnackbar({
         open: true,
         message: `Purchase order ${updated.poNumber} updated successfully`,
@@ -224,43 +258,195 @@ export const AdminPODetails = () => {
     }
   };
 
+  const retryLoad = async () => {
+    setLoading(true);
+    setLoadError("");
+    try {
+      const [poData, vendorData] = await Promise.all([
+        getPurchaseOrderById(id),
+        getVendors(),
+      ]);
+      setPo(poData);
+      setVendors(vendorData || []);
+      setForm(toEditForm(poData));
+      setItems(toEditItems(poData.items));
+    } catch (err) {
+      console.error(err);
+      setLoadError("Purchase order not found or failed to load");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const drawerTitleAdornment = po && (
+    <Stack
+      direction={{ xs: "column", sm: "row" }}
+      spacing={1}
+      alignItems={{ xs: "flex-start", sm: "center" }}
+    >
+      <Chip
+        label={po.status || "pending"}
+        color={getStatusColor(PO_STATUS_COLOR, po.status, "warning")}
+        size="small"
+        sx={{ textTransform: "capitalize" }}
+      />
+      <Chip
+        label={`Delivery: ${po.deliveryStatus || "N/A"}`}
+        color={getStatusColor(DELIVERY_STATUS_COLOR, po.deliveryStatus)}
+        variant="outlined"
+        size="small"
+        sx={{ textTransform: "capitalize" }}
+      />
+    </Stack>
+  );
+
+  const drawerActions = embedded ? (
+    loading ? (
+      <Button
+        variant="outlined"
+        onClick={onClose}
+        sx={{ width: { xs: "100%", sm: "auto" } }}
+      >
+        Close
+      </Button>
+    ) : loadError ? (
+      <Stack
+        direction={{ xs: "column-reverse", sm: "row" }}
+        spacing={1}
+        justifyContent="flex-end"
+      >
+        <Button
+          variant="outlined"
+          onClick={onClose}
+          sx={{ width: { xs: "100%", sm: "auto" } }}
+        >
+          Close
+        </Button>
+        <Button
+          variant="contained"
+          onClick={retryLoad}
+          sx={{ width: { xs: "100%", sm: "auto" } }}
+        >
+          Retry
+        </Button>
+      </Stack>
+    ) : isEditMode ? (
+      <Stack
+        direction={{ xs: "column-reverse", sm: "row" }}
+        spacing={1}
+        justifyContent="flex-end"
+      >
+        <Button
+          variant="outlined"
+          onClick={cancelEdit}
+          disabled={saving}
+          sx={{ width: { xs: "100%", sm: "auto" }, textTransform: "none" }}
+        >
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          onClick={handleSave}
+          disabled={saving}
+          sx={{ width: { xs: "100%", sm: "auto" }, textTransform: "none" }}
+        >
+          {saving ? "Saving..." : "Save changes"}
+        </Button>
+      </Stack>
+    ) : (
+      <Stack
+        direction={{ xs: "column-reverse", sm: "row" }}
+        spacing={1}
+        justifyContent="flex-end"
+      >
+        <Button
+          variant="outlined"
+          onClick={onClose}
+          sx={{ width: { xs: "100%", sm: "auto" } }}
+        >
+          Close
+        </Button>
+        {isPending && (
+          <Button
+            variant="contained"
+            startIcon={<EditIcon />}
+            onClick={startEdit}
+            sx={{ width: { xs: "100%", sm: "auto" }, textTransform: "none" }}
+          >
+            Edit
+          </Button>
+        )}
+      </Stack>
+    )
+  ) : null;
+
   if (loading) {
-    return (
+    const loadingContent = (
       <Box sx={{ display: "flex", justifyContent: "center", py: 5 }}>
         <CircularProgress />
       </Box>
     );
-  }
-
-  if (loadError) {
-    return (
-      <Box>
-        <Typography color="error" sx={{ mb: 2 }}>
-          {loadError}
-        </Typography>
-        <Button
-          variant="outlined"
-          onClick={() => navigate("/admin/purchase-orders")}
-        >
-          Back to Purchase Orders
-        </Button>
-      </Box>
+    return embedded ? (
+      <DetailsDrawer
+        open={open}
+        onClose={onClose}
+        title={po?.poNumber || "Purchase Order"}
+        titleAdornment={drawerTitleAdornment}
+        actions={drawerActions}
+        width={{ xs: "100%", sm: 720, md: 800 }}
+      >
+        {loadingContent}
+      </DetailsDrawer>
+    ) : (
+      loadingContent
     );
   }
 
-  return (
+  if (loadError) {
+    const errorContent = (
+      <Box>
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {loadError}
+        </Alert>
+        {!embedded && (
+          <Button
+            variant="outlined"
+            onClick={() => navigate("/admin/purchase-orders")}
+          >
+            Back to Purchase Orders
+          </Button>
+        )}
+      </Box>
+    );
+    return embedded ? (
+      <DetailsDrawer
+        open={open}
+        onClose={onClose}
+        title={po?.poNumber || "Purchase Order"}
+        titleAdornment={drawerTitleAdornment}
+        actions={drawerActions}
+        width={{ xs: "100%", sm: 720, md: 800 }}
+      >
+        {errorContent}
+      </DetailsDrawer>
+    ) : (
+      errorContent
+    );
+  }
+
+  const detailsContent = (
     <Box
       sx={{
         display: "flex",
         flexDirection: "column",
-        height: "100%",
+        height: embedded ? "auto" : "100%",
         width: "100%",
         minWidth: 0,
         overflowX: "hidden",
       }}
     >
       {/* Fixed header */}
-      <Box sx={{ flexShrink: 0 }}>
+      {!embedded && <Box sx={{ flexShrink: 0 }}>
         <Box
           sx={{
             display: "flex",
@@ -306,10 +492,17 @@ export const AdminPODetails = () => {
           )}
         </Box>
         <Divider sx={{ my: 1.5 }} />
-      </Box>
+      </Box>}
 
       {/* Scrollable body */}
-      <Box sx={{ flex: 1, overflowY: "auto", pr: 0.5 }}>
+      <Box
+        sx={{
+          flex: embedded ? "initial" : 1,
+          minHeight: 0,
+          overflowY: embedded ? "visible" : "auto",
+          pr: 0.5,
+        }}
+      >
         {requestedEdit && !isPending && (
           <Alert severity="info" sx={{ mb: 2 }}>
             Only pending purchase orders can be edited. Showing details in view
@@ -415,7 +608,7 @@ export const AdminPODetails = () => {
             <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
               Items
             </Typography>
-            {isEditMode && (
+            {isEditMode && !embedded && (
               <Button
                 size="small"
                 variant="outlined"
@@ -643,4 +836,21 @@ export const AdminPODetails = () => {
       </Snackbar>
     </Box>
   );
+
+  if (embedded) {
+    return (
+      <DetailsDrawer
+        open={open}
+        onClose={onClose}
+        title={po.poNumber || "Purchase Order"}
+        titleAdornment={drawerTitleAdornment}
+        actions={drawerActions}
+        width={{ xs: "100%", sm: 720, md: 800 }}
+      >
+        {detailsContent}
+      </DetailsDrawer>
+    );
+  }
+
+  return detailsContent;
 };

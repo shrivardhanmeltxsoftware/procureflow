@@ -25,6 +25,7 @@ import {
   getVendors,
   deletePurchaseOrder,
 } from "../services/AdminAPI";
+import { AdminPODetails } from "./AdminPODetails";
 import { formatDate } from "../utils/dateUtils";
 import { DataTable } from "../components/DataTable";
 import {
@@ -51,6 +52,8 @@ export const AdminPurchaseOrders = () => {
   const [purchaseOrders, setPurchaseOrders] = useState([]);
   const [vendors, setVendors] = useState([]);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [selectedPurchaseOrder, setSelectedPurchaseOrder] = useState(null);
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   const loadData = () => Promise.all([getAllPurchaseOrders(), getVendors()]);
 
@@ -187,9 +190,11 @@ export const AdminPurchaseOrders = () => {
           <Stack direction="row" spacing={1} justifyContent="center">
             <Tooltip title="View">
               <IconButton
-                onClick={() =>
-                  navigate(`/admin/purchase-orders/${id}?mode=view`)
-                }
+                aria-label={`View purchase order ${po.poNumber || ""}`}
+                onClick={() => {
+                  setSelectedPurchaseOrder({ id, mode: "view" });
+                  setDetailsOpen(true);
+                }}
               >
                 <VisibilityIcon color="primary" />
               </IconButton>
@@ -197,9 +202,11 @@ export const AdminPurchaseOrders = () => {
 
             <Tooltip title="Edit">
               <IconButton
-                onClick={() =>
-                  navigate(`/admin/purchase-orders/${id}?mode=edit`)
-                }
+                aria-label={`Edit purchase order ${po.poNumber || ""}`}
+                onClick={() => {
+                  setSelectedPurchaseOrder({ id, mode: "edit" });
+                  setDetailsOpen(true);
+                }}
               >
                 <EditIcon color="primary" />
               </IconButton>
@@ -357,6 +364,17 @@ export const AdminPurchaseOrders = () => {
         )
       ) : (
         <DataTable columns={columns} rows={filteredOrders} />
+      )}
+
+      {selectedPurchaseOrder && (
+        <AdminPODetails
+          key={`${selectedPurchaseOrder.id}-${selectedPurchaseOrder.mode}`}
+          embedded
+          open={detailsOpen}
+          purchaseOrderId={selectedPurchaseOrder.id}
+          initialMode={selectedPurchaseOrder.mode}
+          onClose={() => setDetailsOpen(false)}
+        />
       )}
 
       <Dialog open={!!deleteTarget} onClose={() => setDeleteTarget(null)}>
