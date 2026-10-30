@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Chip,
-  Divider,
   IconButton,
   Stack,
   Tooltip,
@@ -247,11 +246,6 @@ export const PurchaseOrders = () => {
 
   return (
     <Box>
-      <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-        Purchase Orders
-      </Typography>
-      <Divider sx={{ mt: 2 }} />
-
       {loading ? (
         <LoadingState message="Loading purchase orders..." />
       ) : error ? (

@@ -6,7 +6,9 @@ const theme = createTheme({
   palette: {
     primary: { main: "#1565C0" },
     secondary: { main: "#37474F" },
-    background: { default: "#F5F7FA", paper: "#FFFFFF" },
+    background: { default: "#F4F6F8", paper: "#FFFFFF" },
+    text: { primary: "#111827", secondary: "#64748B" },
+    divider: "#D9DDE3",
     success: { main: "#2E7D32" },
     warning: { main: "#ED6C02" },
     error: { main: "#D32F2F" },

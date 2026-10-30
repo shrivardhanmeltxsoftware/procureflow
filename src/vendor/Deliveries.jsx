@@ -2,8 +2,6 @@ import { useCallback, useState, useEffect } from "react";
 import { Navigate } from "react-router";
 import {
   Box,
-  Typography,
-  Divider,
   Button,
   Chip,
   Stack,
@@ -156,13 +154,6 @@ export const Deliveries = () => {
 
   return (
     <Box>
-      <Box>
-        <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-          Deliveries
-        </Typography>
-      </Box>
-      <Divider sx={{ mt: 2 }} />
-
       {loading ? (
         <LoadingState message="Loading deliveries..." />
       ) : error ? (

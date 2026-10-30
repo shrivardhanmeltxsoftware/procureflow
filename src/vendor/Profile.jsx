@@ -3,7 +3,6 @@ import {
   Alert,
   Box,
   Button,
-  Divider,
   FormControl,
   Grid,
   InputLabel,
@@ -70,13 +69,6 @@ export const Profile = () => {
 
   return (
     <Box>
-      <Box>
-        <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-          Profile
-        </Typography>
-      </Box>
-      <Divider sx={{ mt: 2 }} />
-
       <Box sx={{ minWidth: 0 }}>
         <Box
           sx={{

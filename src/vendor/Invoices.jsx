@@ -1,7 +1,6 @@
 import {
   Box,
   Typography,
-  Divider,
   Button,
   Chip,
   DialogContent,
@@ -274,9 +273,6 @@ export const Invoices = () => {
           gap: 1.5,
         }}
       >
-        <Typography variant="h4" sx={{ fontWeight: "bold", flexGrow: 1 }}>
-          Invoices
-        </Typography>
         <Button
           variant="contained"
           color="primary"
@@ -287,8 +283,6 @@ export const Invoices = () => {
           Upload invoice
         </Button>
       </Box>
-      <Divider sx={{ mt: 2 }} />
-
       {loading ? (
         <LoadingState message="Loading invoices..." />
       ) : loadError ? (
@@ -358,10 +352,7 @@ export const Invoices = () => {
           {purchaseOrdersLoading ? (
             <LoadingState message="Loading purchase orders..." />
           ) : purchaseOrdersError ? (
-            <ErrorState
-              message={purchaseOrdersError}
-              onRetry={retryFetchPOs}
-            />
+            <ErrorState message={purchaseOrdersError} onRetry={retryFetchPOs} />
           ) : null}
 
           <Typography

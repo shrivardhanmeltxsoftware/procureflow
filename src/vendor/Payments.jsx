@@ -1,4 +1,4 @@
-import { Box, Typography, Divider, Chip } from "@mui/material";
+import { Box, Chip } from "@mui/material";
 import { getInvoices } from "../services/api";
 import { useCallback, useState, useEffect } from "react";
 import { Navigate } from "react-router";
@@ -125,12 +125,6 @@ export const Payments = () => {
 
   return (
     <Box>
-      <Box>
-        <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-          Payments
-        </Typography>
-      </Box>
-      <Divider sx={{ mt: 2, mb: 3 }} />
       {loading ? (
         <LoadingState message="Loading payments..." />
       ) : error ? (

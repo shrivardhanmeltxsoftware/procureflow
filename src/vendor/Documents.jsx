@@ -2,7 +2,6 @@ import { useCallback, useState, useEffect } from "react";
 import {
   Box,
   Typography,
-  Divider,
   Button,
   Dialog,
   DialogTitle,
@@ -201,24 +200,19 @@ export const Documents = () => {
           flexDirection: { xs: "column", sm: "row" },
           alignItems: { xs: "stretch", sm: "center" },
           gap: 1.5,
+          mb: 2,
         }}
       >
-        <Typography variant="h4" sx={{ fontWeight: "bold", flexGrow: 1 }}>
-          Documents
-        </Typography>
-
         <Button
           variant="contained"
           color="primary"
           startIcon={<FileUploadIcon />}
           onClick={() => setOpen(true)}
-          sx={{ width: { xs: "100%", sm: "auto" } }}
+          sx={{ width: { xs: "100%", sm: "auto" }}}
         >
           Upload document
         </Button>
       </Box>
-      <Divider sx={{ mt: 2, mb: 3 }} />
-
       {loading ? (
         <LoadingState message="Loading documents..." />
       ) : loadError ? (
