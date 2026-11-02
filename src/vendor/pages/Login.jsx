@@ -113,7 +113,7 @@ export const Login = () => {
           gap: 2,
         }}
       >
-        <Stack direction="row" spacing={1.5} alignItems="center">
+        <Stack direction="row" spacing={1.5} sx={{alignItems:"center"}}>
           <Box
             sx={{
               width: 40,
@@ -128,7 +128,10 @@ export const Login = () => {
           >
             <LayersOutlinedIcon sx={{ fontSize: 22 }} />
           </Box>
-          <Typography variant="h6" fontWeight={800} letterSpacing={-0.5}>
+          <Typography
+            variant="h6"
+            sx={{ fontWeight: 800, letterSpacing: -0.5 }}
+          >
             Procure
             <Box component="span" sx={{ color: "primary.main" }}>
               Flow
@@ -173,7 +176,8 @@ export const Login = () => {
           maxWidth: 1440,
           mx: "auto",
           px: { xs: 2, sm: 4, lg: 6 },
-          py: { xs: 2, sm: 3, lg: 4 },
+          // py: { xs: 2, sm: 3, lg: 4 },
+          py:0,
           display: "flex",
           alignItems: "center",
           "@media (max-width: 599px)": {
@@ -448,7 +452,7 @@ export const Login = () => {
                     sx={{
                       "& .MuiOutlinedInput-root": {
                         minHeight: 56,
-                        borderRadius: 2.5,
+                        borderRadius: 1.5,
                         transition: "box-shadow 160ms ease",
                         "&:hover .MuiOutlinedInput-notchedOutline": {
                           borderColor: "primary.main",
@@ -491,7 +495,7 @@ export const Login = () => {
                       sx={{
                         "& .MuiOutlinedInput-root": {
                           minHeight: 56,
-                          borderRadius: 2.5,
+                          borderRadius: 1.5,
                           transition: "box-shadow 160ms ease",
                           "&:hover .MuiOutlinedInput-notchedOutline": {
                             borderColor: "primary.main",
@@ -537,7 +541,6 @@ export const Login = () => {
                       sx={{
                         display: "flex",
                         justifyContent: "flex-end",
-                        
                       }}
                     >
                       <MuiLink

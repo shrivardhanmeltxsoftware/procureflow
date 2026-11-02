@@ -31,6 +31,9 @@ import LayersOutlinedIcon from "@mui/icons-material/LayersOutlined";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 import { Link as RouterLink, useNavigate } from "react-router";
 import { registerVendor } from "../../services/api.js";
 
@@ -380,7 +383,12 @@ export const Register = () => {
             >
               <LayersOutlinedIcon />
             </Avatar>
-            <Typography variant="h5" fontWeight={800} letterSpacing={-0.5}>
+            <Typography
+              variant="h5"
+              fontWeight={800}
+              letterSpacing={-0.5}
+              sx={{ fontWeight: 800, letterSpacing: 0 }}
+            >
               Procure
               <Box component="span" sx={{ color: "primary.main" }}>
                 Flow
@@ -464,7 +472,6 @@ export const Register = () => {
                   bgcolor: "#F8FAFC",
                   borderBottom: "1px solid",
                   borderColor: "divider",
-                
                 }}
               >
                 <Stepper activeStep={step} alternativeLabel>
@@ -684,12 +691,43 @@ export const Register = () => {
                         })}
                       </Grid>
                       <Grid size={{ xs: 12, sm: 6 }}>
-                        {textField("establishmentDate", "Establishment date", {
-                          type: "date",
-                          htmlInputProps: {
-                            max: new Date().toISOString().slice(0, 10),
-                          },
-                        })}
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DatePicker
+                            label="Establishment date"
+                            value={
+                              form.establishmentDate
+                                ? dayjs(form.establishmentDate)
+                                : null
+                            }
+                            onChange={(date) => {
+                              setForm((previous) => ({
+                                ...previous,
+                                establishmentDate:
+                                  date?.isValid() &&
+                                  !date.isAfter(dayjs(), "day")
+                                    ? date.format("YYYY-MM-DD")
+                                    : "",
+                              }));
+                              setErrors((previous) => {
+                                const next = { ...previous };
+                                delete next.establishmentDate;
+                                return next;
+                              });
+                            }}
+                            disableFuture
+                            format="DD/MM/YYYY"
+                            slotProps={{
+                              textField: {
+                                id: "vendor-establishmentDate",
+                                name: "establishmentDate",
+                                fullWidth: true,
+                                required: true,
+                                error: Boolean(errors.establishmentDate),
+                                helperText: errors.establishmentDate || " ",
+                              },
+                            }}
+                          />
+                        </LocalizationProvider>
                       </Grid>
                     </Grid>
                   </>

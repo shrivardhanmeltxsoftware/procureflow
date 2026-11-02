@@ -186,7 +186,8 @@ export const AdminLogin = () => {
           maxWidth: 1440,
           mx: "auto",
           px: { xs: 1.5, sm: 4, lg: 6 },
-          py: { xs: 1.5, sm: 3 },
+          // py: { xs: 1.5, sm: 3 },
+          py:0,
           display: "flex",
           alignItems: "center",
         }}
@@ -424,7 +425,7 @@ export const AdminLogin = () => {
                     sx={{
                       "& .MuiOutlinedInput-root": {
                         minHeight: 56,
-                        borderRadius: 2.5,
+                        borderRadius: 1.5,
                       },
                     }}
                     slotProps={{
@@ -460,7 +461,7 @@ export const AdminLogin = () => {
                     sx={{
                       "& .MuiOutlinedInput-root": {
                         minHeight: 56,
-                        borderRadius: 2.5,
+                        borderRadius: 1.5,
                       },
                     }}
                     slotProps={{
