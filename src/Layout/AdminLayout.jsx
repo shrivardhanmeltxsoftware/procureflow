@@ -25,7 +25,7 @@ const AdminLayout = () => {
     localStorage.removeItem("admin");
     localStorage.removeItem("adminId");
     localStorage.removeItem("adminSidebarPinned");
-    navigate("/admin-login", { replace: true });
+    navigate("/", { replace: true });
   };
   const adminName =
     admin.name ||
