@@ -1,48 +1,52 @@
-import { useState } from "react";
-import { Box, ThemeProvider, CssBaseline, useMediaQuery } from "@mui/material";
-import { Navigate, Outlet } from "react-router";
+import { Box, CssBaseline, ThemeProvider } from "@mui/material";
+import { Navigate, Outlet, useNavigate } from "react-router";
+import DashboardLayout from "../components/dashboard/DashboardLayout";
+import { adminDashboardConfig } from "../config/dashboardConfig";
 import adminTheme from "../theme/adminTheme";
-import AdminHeader from "./AdminHeader";
-import AdminSidebar from "./AdminSidebar";
+import { getStoredAdmin } from "../utils/auth";
+
+const formatRole = (role) =>
+  role
+    ? role
+        .split(/[_\s-]+/)
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join(" ")
+    : "Administrator";
 
 const AdminLayout = () => {
-  const isMobile = useMediaQuery(adminTheme.breakpoints.down("md"));
-  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
-  const isAuthenticated = Boolean(localStorage.getItem("admin"));
+  const navigate = useNavigate();
+  const admin = getStoredAdmin();
 
-  if (!isAuthenticated) {
+  if (!admin?.id) {
     return <Navigate to="/admin-login" replace />;
   }
+
+  const logout = () => {
+    localStorage.removeItem("admin");
+    localStorage.removeItem("adminId");
+    localStorage.removeItem("adminSidebarPinned");
+    navigate("/admin-login", { replace: true });
+  };
+  const adminName =
+    admin.name ||
+    [admin.firstName, admin.lastName].filter(Boolean).join(" ") ||
+    "Admin User";
 
   return (
     <ThemeProvider theme={adminTheme}>
       <CssBaseline />
-      <Box sx={{ display: "flex", minHeight: "100vh" }}>
-        <AdminHeader
-          isMobile={isMobile}
-          onMenuClick={() => setMobileDrawerOpen(true)}
-        />
-        <AdminSidebar
-          isMobile={isMobile}
-          open={mobileDrawerOpen}
-          onClose={() => setMobileDrawerOpen(false)}
-        />
-
-        <Box
-          component="main"
-          sx={{
-            flexGrow: 1,
-            minWidth: 0,
-            mt: { xs: "56px", sm: "64px" },
-            height: { xs: "calc(100vh - 56px)", sm: "calc(100vh - 64px)" },
-            p: { xs: 1.5, sm: 2, md: 3 },
-            boxSizing: "border-box",
-            bgcolor: "background.default",
-            overflowY: "auto",
+      <Box sx={{ minHeight: "100dvh" }}>
+        <DashboardLayout
+          config={adminDashboardConfig}
+          profile={{
+            name: adminName,
+            email: admin.email,
+            role: formatRole(admin.role),
           }}
+          onLogout={logout}
         >
           <Outlet />
-        </Box>
+        </DashboardLayout>
       </Box>
     </ThemeProvider>
   );

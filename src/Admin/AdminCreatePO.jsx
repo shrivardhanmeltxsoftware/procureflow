@@ -243,19 +243,12 @@ export const AdminCreatePO = () => {
             <ArrowBackIcon />
           </IconButton>
           <Box sx={{ flexGrow: 1 }}>
-            <Typography
-              variant="h4"
-              sx={{ fontWeight: "bold", fontSize: { xs: "1.5rem", sm: "2.125rem" } }}
-            >
-              Create Purchase Order
-            </Typography>
             <Typography variant="subtitle2" color="text.secondary">
               Raise a new PO and assign it to a vendor
             </Typography>
           </Box>
           <Chip label={`${nextPoNumber}`} variant="outlined" />
         </Box>
-        <Divider sx={{ my: 1.5 }} />
       </Box>
 
       {loading ? (

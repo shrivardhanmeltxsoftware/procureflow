@@ -7,7 +7,6 @@ import {
   Button,
   Chip,
   Alert,
-  Divider,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -203,9 +202,6 @@ export const AdminDocuments = () => {
           }}
         >
           <Box>
-            <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-              Documents
-            </Typography>
             <Typography variant="subtitle2" color="text.secondary">
               Review and approve documents uploaded by vendors
             </Typography>
@@ -220,6 +216,7 @@ export const AdminDocuments = () => {
               flexGrow: 1,
               minWidth: 0,
               justifyContent: "flex-end",
+              mb:2
             }}
           >
             <SearchFilterBar
@@ -237,7 +234,6 @@ export const AdminDocuments = () => {
             />
           </Box>
         </Box>
-        <Divider sx={{ mt: 2, mb: 3 }} />
       </Box>
 
       {actionError && (

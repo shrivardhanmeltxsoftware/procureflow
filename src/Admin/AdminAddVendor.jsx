@@ -106,9 +106,6 @@ export const AddVendor = () => {
             gap: 2,
           }}
         >
-          <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-            Add vendor
-          </Typography>
           <Box
             sx={{
               display: "flex",
@@ -129,7 +126,6 @@ export const AddVendor = () => {
             </Button>
           </Box>
         </Box>
-        <Divider sx={{ my: 2 }} />
       </Box>
 
       <Paper
@@ -550,4 +546,3 @@ export const AddVendor = () => {
     </Box>
   );
 };
-

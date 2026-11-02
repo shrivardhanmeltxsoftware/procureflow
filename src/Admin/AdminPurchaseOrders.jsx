@@ -2,7 +2,6 @@ import {
   Box,
   Stack,
   Typography,
-  Divider,
   Button,
   Chip,
   Dialog,
@@ -283,9 +282,6 @@ export const AdminPurchaseOrders = () => {
           }}
         >
           <Box>
-            <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-              Purchase Orders
-            </Typography>
             <Typography variant="subtitle2" color="text.secondary">
               Create and manage purchase orders raised to vendors
             </Typography>
@@ -300,6 +296,7 @@ export const AdminPurchaseOrders = () => {
               flexGrow: 1,
               minWidth: 0,
               justifyContent: "flex-end",
+              mb:2
             }}
           >
             <SearchFilterBar
@@ -332,7 +329,6 @@ export const AdminPurchaseOrders = () => {
             </Button>
           </Box>
         </Box>
-        <Divider sx={{ my: 2 }} />
       </Box>
 
       {/* Scrollable Table Section */}

@@ -2,7 +2,6 @@ import {
   Box,
   Stack,
   Typography,
-  Divider,
   Button,
   Chip,
   Alert,
@@ -268,9 +267,6 @@ export const AdminVendors = () => {
           }}
         >
           <Box>
-            <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-              Vendors
-            </Typography>
             <Typography variant="subtitle2" color="text.secondary">
               Track and update delivery status of accepted purchase orders
             </Typography>
@@ -285,6 +281,7 @@ export const AdminVendors = () => {
               flexGrow: 1,
               minWidth: 0,
               justifyContent: "flex-end",
+              mb:2
             }}
           >
             <SearchFilterBar
@@ -315,7 +312,6 @@ export const AdminVendors = () => {
             </Button>
           </Box>
         </Box>
-        <Divider sx={{ my: 2 }} />
       </Box>
 
       {actionError && !deleteDialogOpen && (

@@ -10,7 +10,6 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
-  Divider,
   Paper,
   Stack,
   Tooltip,
@@ -390,13 +389,9 @@ export const AdminPayments = () => {
       }}
     >
       <Box>
-        <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-          Payments
-        </Typography>
         <Typography variant="subtitle2" color="text.secondary">
           Monitor approved invoices and track vendor payment progress.
         </Typography>
-        <Divider sx={{ mt: 2, mb: 1 }} />
       </Box>
 
       {!loading && !error && (

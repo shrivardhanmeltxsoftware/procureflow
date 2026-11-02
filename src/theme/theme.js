@@ -9,6 +9,7 @@ const theme = createTheme({
     background: { default: "#F4F6F8", paper: "#FFFFFF" },
     text: { primary: "#111827", secondary: "#64748B" },
     divider: "#D9DDE3",
+    navigation: { active: "#E3F2FD", hover: "#F1F7FE" },
     success: { main: "#2E7D32" },
     warning: { main: "#ED6C02" },
     error: { main: "#D32F2F" },

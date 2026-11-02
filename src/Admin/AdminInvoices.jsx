@@ -6,7 +6,6 @@ import {
   Button,
   Chip,
   Alert,
-  Divider,
   Tooltip,
   Dialog,
   DialogTitle,
@@ -139,8 +138,13 @@ export const AdminInvoices = () => {
       align: "center",
       sticky: true,
       render: (invoice) => (
-        <Stack direction="row" spacing={1} justifycontent="center" alignItems='
-        ' >
+        <Stack
+          direction="row"
+          spacing={1}
+          justifycontent="center"
+          alignItems="
+        "
+        >
           <Tooltip title="View">
             <IconButton
               aria-label={`View ${invoice.invoiceNumber || "invoice"}`}
@@ -237,12 +241,10 @@ export const AdminInvoices = () => {
             flexDirection: { xs: "column", md: "row" },
             alignItems: { xs: "stretch", md: "center" },
             gap: 2,
+            mb: 2,
           }}
         >
           <Box>
-            <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-              Invoices
-            </Typography>
             <Typography variant="subtitle2" color="text.secondary">
               Review vendor invoices and approve or reject them
             </Typography>
@@ -273,7 +275,6 @@ export const AdminInvoices = () => {
             />
           </Box>
         </Box>
-        <Divider sx={{ mt: 2, mb: 3 }} />
       </Box>
 
       {actionError && (

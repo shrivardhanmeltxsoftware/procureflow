@@ -8,7 +8,6 @@ import {
 import {
   Box,
   Typography,
-  Divider,
   Button,
   Chip,
   MenuItem,
@@ -272,12 +271,10 @@ export const AdminDeliveries = () => {
             justifyContent: "space-between",
             alignItems: { xs: "stretch", md: "center" },
             gap: 2,
+            mb:2
           }}
         >
           <Box>
-            <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-              Deliveries
-            </Typography>
             <Typography variant="subtitle2" color="text.secondary">
               Track and update delivery status of accepted purchase orders
             </Typography>
@@ -298,7 +295,6 @@ export const AdminDeliveries = () => {
             ]}
           />
         </Box>
-        <Divider sx={{ my: 2 }} />
       </Box>
 
       {/* Scrollable table */}

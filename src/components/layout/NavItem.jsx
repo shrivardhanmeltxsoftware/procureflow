@@ -5,8 +5,9 @@ import { NavLink } from "react-router";
 const NavItem = ({ text, icon, to, active = false, expanded = false, onClick }) => (
   <Tooltip title={expanded ? "" : text} placement="right" arrow>
     <ListItemButton
-      component={NavLink}
-      to={to}
+      component={to ? NavLink : "button"}
+      {...(to ? { to } : { type: "button" })}
+      className={to && active ? "active" : undefined}
       onClick={onClick}
       aria-current={active ? "page" : undefined}
       sx={{
@@ -20,10 +21,13 @@ const NavItem = ({ text, icon, to, active = false, expanded = false, onClick }) 
             duration: theme.transitions.duration.shortest,
           }),
         "&:hover": {
-          bgcolor: "action.hover",
+          bgcolor: (theme) =>
+            theme.palette.navigation?.hover || theme.palette.action.hover,
         },
         "&.active": {
-          bgcolor: (theme) => alpha(theme.palette.primary.main, 0.12),
+          bgcolor: (theme) =>
+            theme.palette.navigation?.active ||
+            alpha(theme.palette.primary.main, 0.12),
           fontWeight: 600,
         },
       }}
