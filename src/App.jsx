@@ -1,6 +1,6 @@
 import { Box, CircularProgress } from "@mui/material";
-import { Login } from "./vendor/Login";
-import { Register } from "./vendor/Register";
+import { Login } from "./vendor/pages/Login.jsx";
+import { Register } from "./vendor/pages/Register.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router";
 
 const LoadingFallback = () => (
@@ -35,142 +35,139 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    ...lazyRoute(() => import("./vendor/Dashboard"), "Dashboard"),
+    ...lazyRoute(
+      () => import("./vendor/layout/VendorLayout.jsx"),
+      "VendorLayout",
+    ),
     children: [
       {
         index: true,
-        ...lazyRoute(() => import("./vendor/DashboardChart"), "DashboardChart"),
+        ...lazyRoute(() => import("./vendor/pages/DashboardChart.jsx"), "DashboardChart"),
       },
       {
         path: "overview",
-        ...lazyRoute(() => import("./vendor/DashboardChart"), "DashboardChart"),
+        ...lazyRoute(() => import("./vendor/pages/DashboardChart.jsx"), "DashboardChart"),
       },
       {
         path: "profile",
-        ...lazyRoute(() => import("./vendor/Profile"), "Profile"),
+        ...lazyRoute(() => import("./vendor/pages/Profile.jsx"), "Profile"),
       },
       {
         path: "documents",
-        ...lazyRoute(() => import("./vendor/Documents"), "Documents"),
+        ...lazyRoute(() => import("./vendor/pages/Documents.jsx"), "Documents"),
       },
       {
         path: "purchase-orders",
-        ...lazyRoute(
-          () => import("./vendor/PurchaseOrders"),
-          "PurchaseOrders",
-        ),
+        ...lazyRoute(() => import("./vendor/pages/PurchaseOrders.jsx"), "PurchaseOrders"),
       },
       {
         path: "deliveries",
-        ...lazyRoute(() => import("./vendor/Deliveries"), "Deliveries"),
+        ...lazyRoute(() => import("./vendor/pages/Deliveries.jsx"), "Deliveries"),
       },
       {
         path: "invoices",
-        ...lazyRoute(() => import("./vendor/Invoices"), "Invoices"),
+        ...lazyRoute(() => import("./vendor/pages/Invoices.jsx"), "Invoices"),
       },
       {
         path: "payments",
-        ...lazyRoute(() => import("./vendor/Payments"), "Payments"),
+        ...lazyRoute(() => import("./vendor/pages/Payments.jsx"), "Payments"),
       },
       {
         path: "messages",
-        ...lazyRoute(() => import("./vendor/Messages"), "Messages"),
+        ...lazyRoute(() => import("./vendor/pages/Messages.jsx"), "Messages"),
       },
     ],
   },
   // Admin routes from here
   {
     path: "/admin-login",
-    ...lazyRoute(
-      () => import("./Layout/AdminThemeWrapper"),
-      "default",
-    ),
+    ...lazyRoute(() => import("./admin/layout/AdminThemeWrapper.jsx"), "default"),
     children: [
       {
         index: true,
-        ...lazyRoute(() => import("./Admin/AdminLogin"), "AdminLogin"),
+        ...lazyRoute(() => import("./admin/pages/AdminLogin.jsx"), "AdminLogin"),
       },
     ],
   },
   {
     path: "/admin",
-    ...lazyRoute(() => import("./Layout/AdminLayout"), "default"),
+    ...lazyRoute(() => import("./admin/layout/AdminLayout.jsx"), "default"),
     children: [
       {
         index: true,
-        ...lazyRoute(
-          () => import("./Admin/AdminDashboard"),
-          "AdminDashboard",
-        ),
+        ...lazyRoute(() => import("./admin/pages/AdminDashboard.jsx"), "AdminDashboard"),
       },
       {
         path: "dashboard",
-        ...lazyRoute(
-          () => import("./Admin/AdminDashboard"),
-          "AdminDashboard",
-        ),
+        ...lazyRoute(() => import("./admin/pages/AdminDashboard.jsx"), "AdminDashboard"),
       },
       {
         path: "vendors",
-        ...lazyRoute(() => import("./Admin/AdminVendors"), "AdminVendors"),
+        ...lazyRoute(
+          () => import("./admin/pages/AdminVendors.jsx"),
+          "AdminVendors",
+        ),
       },
       {
         path: "vendors/:id",
         ...lazyRoute(
-          () => import("./Admin/AdminVendorDetails"),
+          () => import("./admin/pages/AdminVendorDetails.jsx"),
           "AdminVendorDetails",
         ),
       },
       {
         path: "addVendor",
-        ...lazyRoute(() => import("./Admin/AdminAddVendor"), "AddVendor"),
+        ...lazyRoute(() => import("./admin/pages/AdminAddVendor.jsx"), "AddVendor"),
       },
       {
         path: "purchase-orders",
         ...lazyRoute(
-          () => import("./Admin/AdminPurchaseOrders"),
+          () => import("./admin/pages/AdminPurchaseOrders.jsx"),
           "AdminPurchaseOrders",
         ),
       },
       {
         path: "purchase-orders/create",
-        ...lazyRoute(
-          () => import("./Admin/AdminCreatePO"),
-          "AdminCreatePO",
-        ),
+        ...lazyRoute(() => import("./admin/pages/AdminCreatePO.jsx"), "AdminCreatePO"),
       },
       {
         path: "purchase-orders/:id",
-        ...lazyRoute(
-          () => import("./Admin/AdminPODetails"),
-          "AdminPODetails",
-        ),
+        ...lazyRoute(() => import("./admin/pages/AdminPODetails.jsx"), "AdminPODetails"),
       },
       {
         path: "deliveries",
         ...lazyRoute(
-          () => import("./Admin/AdminDeliveries"),
+          () => import("./admin/pages/AdminDeliveries.jsx"),
           "AdminDeliveries",
         ),
       },
       {
         path: "invoices",
-        ...lazyRoute(() => import("./Admin/AdminInvoices"), "AdminInvoices"),
+        ...lazyRoute(
+          () => import("./admin/pages/AdminInvoices.jsx"),
+          "AdminInvoices",
+        ),
       },
       {
         path: "payments",
-        ...lazyRoute(() => import("./Admin/AdminPayments"), "AdminPayments"),
+        ...lazyRoute(
+          () => import("./admin/pages/AdminPayments.jsx"),
+          "AdminPayments",
+        ),
       },
       {
         path: "documents",
         ...lazyRoute(
-          () => import("./Admin/AdminDocuments"),
+          () => import("./admin/pages/AdminDocuments.jsx"),
           "AdminDocuments",
         ),
       },
       {
         path: "messages",
-        ...lazyRoute(() => import("./Admin/AdminMessages"), "AdminMessages"),
+        ...lazyRoute(
+          () => import("./admin/pages/AdminMessages.jsx"),
+          "AdminMessages",
+        ),
       },
     ],
   },

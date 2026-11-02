@@ -1,5 +1,5 @@
-import api from "./api";
-export { updatePOStatus } from "./api";
+import api from "./api.js";
+export { updatePOStatus } from "./api.js";
 
 export const loginAdmin = async (email, password) => {
   try {
