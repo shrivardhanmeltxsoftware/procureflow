@@ -21,43 +21,59 @@ const LogoutDialog = ({
     open={open}
     onClose={onClose}
     aria-labelledby="portal-logout-title"
+    aria-describedby="portal-logout-description"
+    maxWidth="xs"
+    fullWidth
     PaperProps={{
       sx: {
-        borderRadius: 2,
-        p: 1,
-        maxWidth: 420,
-        width: "100%",
+        borderRadius: 3,
+        overflow: "hidden",
+        boxShadow: (theme) => theme.shadows[12],
       },
     }}
   >
-    <DialogTitle id="portal-logout-title" sx={{ pb: 1, pt: 2 }}>
+    <DialogTitle id="portal-logout-title" sx={{ px: 3, pt: 3, pb: 1 }}>
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
         <Avatar
           sx={{
             bgcolor: (theme) => alpha(theme.palette.error.main, 0.1),
             color: "error.main",
-            width: 44,
-            height: 44,
+            width: 48,
+            height: 48,
           }}
         >
           <LogoutOutlinedIcon />
         </Avatar>
-        <Box>
-          <Typography variant="h6" sx={{ fontWeight: 700, lineHeight: 1.2 }}>
-            Sign Out
+        <Box sx={{ minWidth: 0 }}>
+          <Typography variant="h6" sx={{ fontWeight: 700, lineHeight: 1.3 }}>
+            Sign out?
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 0.25 }}>
             ProcureFlow {portalName}
           </Typography>
         </Box>
       </Box>
     </DialogTitle>
-    <DialogContent sx={{ py: 2 }}>
-      <Typography variant="body1" color="text.primary">
-        Are you sure you want to log out? You will need to sign in again to access your account.
+    <DialogContent sx={{ px: 3, pt: 1, pb: 3 }}>
+      <Typography
+        id="portal-logout-description"
+        variant="body2"
+        color="text.secondary"
+        sx={{ lineHeight: 1.6 }}
+      >
+        You'll be signed out of your account. You can sign back in at any time.
       </Typography>
     </DialogContent>
-    <DialogActions sx={{ px: 3, pb: 2.5, pt: 1, gap: 1.5 }}>
+    <DialogActions
+      sx={{
+        px: 3,
+        py: 2,
+        gap: 1.5,
+        borderTop: "1px solid",
+        borderColor: "divider",
+        bgcolor: "background.default",
+      }}
+    >
       <Button
         onClick={onClose}
         variant="outlined"
@@ -67,6 +83,7 @@ const LogoutDialog = ({
           borderColor: "divider",
           textTransform: "none",
           fontWeight: 600,
+          minHeight: 42,
         }}
       >
         Cancel
@@ -80,9 +97,10 @@ const LogoutDialog = ({
           flex: 1,
           textTransform: "none",
           fontWeight: 600,
+          minHeight: 42,
         }}
       >
-        Sign Out
+        Sign out
       </Button>
     </DialogActions>
   </Dialog>
