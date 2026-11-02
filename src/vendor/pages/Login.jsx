@@ -186,7 +186,11 @@ export const Login = () => {
           sx={{
             width: "100%",
             display: "grid",
-            gridTemplateColumns: { xs: "1fr", md: "1.05fr 0.95fr", lg: "7fr 5fr" },
+            gridTemplateColumns: {
+              xs: "1fr",
+              md: "1.05fr 0.95fr",
+              lg: "7fr 5fr",
+            },
             overflow: "hidden",
             borderRadius: 4,
             border: "1px solid",
@@ -360,7 +364,11 @@ export const Login = () => {
                   />
                   <Typography
                     variant="body2"
-                    sx={{ color: "rgba(248,250,252,0.9)", lineHeight: 1.55, fontSize: "0.875rem" }}
+                    sx={{
+                      color: "rgba(248,250,252,0.9)",
+                      lineHeight: 1.55,
+                      fontSize: "0.875rem",
+                    }}
                   >
                     {benefit}
                   </Typography>
@@ -397,13 +405,21 @@ export const Login = () => {
                 >
                   Welcome Back
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 1, fontSize: "0.925rem", lineHeight: 1.6 }}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ mt: 1, fontSize: "0.925rem", lineHeight: 1.6 }}
+                >
                   Sign in to your ProcureFlow account.
                 </Typography>
               </Box>
 
               {error && (
-                <Alert severity="error" role="alert" sx={{ mb: 3, borderRadius: 2 }}>
+                <Alert
+                  severity="error"
+                  role="alert"
+                  sx={{ mb: 3, borderRadius: 2 }}
+                >
                   {error}
                 </Alert>
               )}
@@ -436,10 +452,6 @@ export const Login = () => {
                         transition: "box-shadow 160ms ease",
                         "&:hover .MuiOutlinedInput-notchedOutline": {
                           borderColor: "primary.main",
-                        },
-                        "&.Mui-focused": {
-                          boxShadow: (theme) =>
-                            `0 0 0 3px ${alpha(theme.palette.primary.main, 0.12)}`,
                         },
                       },
                     }}
@@ -484,17 +496,16 @@ export const Login = () => {
                           "&:hover .MuiOutlinedInput-notchedOutline": {
                             borderColor: "primary.main",
                           },
-                          "&.Mui-focused": {
-                            boxShadow: (theme) =>
-                              `0 0 0 3px ${alpha(theme.palette.primary.main, 0.12)}`,
-                          },
                         },
                       }}
                       slotProps={{
                         input: {
                           startAdornment: (
                             <InputAdornment position="start">
-                              <LockOutlinedIcon fontSize="small" color="action" />
+                              <LockOutlinedIcon
+                                fontSize="small"
+                                color="action"
+                              />
                             </InputAdornment>
                           ),
                           endAdornment: (
@@ -502,21 +513,33 @@ export const Login = () => {
                               <IconButton
                                 type="button"
                                 aria-label={
-                                  showPassword ? "Hide password" : "Show password"
+                                  showPassword
+                                    ? "Hide password"
+                                    : "Show password"
                                 }
                                 onClick={() =>
                                   setShowPassword((visible) => !visible)
                                 }
                                 edge="end"
                               >
-                                {showPassword ? <VisibilityOff fontSize="small" /> : <Visibility fontSize="small" />}
+                                {showPassword ? (
+                                  <VisibilityOff fontSize="small" />
+                                ) : (
+                                  <Visibility fontSize="small" />
+                                )}
                               </IconButton>
                             </InputAdornment>
                           ),
                         },
                       }}
                     />
-                    <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 0.5 }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        
+                      }}
+                    >
                       <MuiLink
                         component={Link}
                         to="/forgot-password"
@@ -575,7 +598,12 @@ export const Login = () => {
                 <Typography
                   variant="caption"
                   color="text.secondary"
-                  sx={{ px: 1, textTransform: "uppercase", letterSpacing: 0.8, fontWeight: 600 }}
+                  sx={{
+                    px: 1,
+                    textTransform: "uppercase",
+                    letterSpacing: 0.8,
+                    fontWeight: 600,
+                  }}
                 >
                   New to ProcureFlow?
                 </Typography>
@@ -590,11 +618,13 @@ export const Login = () => {
                 sx={{
                   minHeight: 52,
                   borderRadius: 2.5,
-                  borderColor: (theme) => alpha(theme.palette.primary.main, 0.32),
+                  borderColor: (theme) =>
+                    alpha(theme.palette.primary.main, 0.32),
                   color: "primary.main",
                   fontWeight: 700,
                   textTransform: "none",
-                  transition: "background-color 160ms ease, border-color 160ms ease",
+                  transition:
+                    "background-color 160ms ease, border-color 160ms ease",
                   "&:hover": {
                     borderColor: "primary.main",
                     bgcolor: (theme) => alpha(theme.palette.primary.main, 0.06),
