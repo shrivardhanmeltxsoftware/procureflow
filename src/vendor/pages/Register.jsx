@@ -464,6 +464,7 @@ export const Register = () => {
                   bgcolor: "#F8FAFC",
                   borderBottom: "1px solid",
                   borderColor: "divider",
+                
                 }}
               >
                 <Stepper activeStep={step} alternativeLabel>
